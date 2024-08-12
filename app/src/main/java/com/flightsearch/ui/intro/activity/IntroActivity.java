@@ -11,13 +11,22 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.flightsearch.R;
+import com.flightsearch.application.MainApplication;
 import com.flightsearch.databinding.ActivityIntroBinding;
 import com.flightsearch.ui.intro.ViewPagerAdapter;
 import com.flightsearch.ui.main.activity.MainActivity;
 import com.flightsearch.ui.userEntry.activity.UserEntryActivity;
 import com.flightsearch.utils.base.BaseActivity;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class IntroActivity extends BaseActivity {
+
+    @Inject
+    MainApplication application;
 
     private ActivityIntroBinding binding;
 
@@ -36,6 +45,7 @@ public class IntroActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 binding.buttonContinueAsGuest.setText(position == 3 ? "Continue as Guest" : "Skip");
+                application.setIntroOpened();
             }
         });
         binding.buttonContinueAsGuest.setOnClickListener(v -> {
@@ -44,13 +54,14 @@ public class IntroActivity extends BaseActivity {
         });
     }
 
-    public void goToMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        goToMainActivity();
     }
 
-    public void goToUserEntryActivity() {
-        startActivity(new Intent(this, UserEntryActivity.class));
+    public void goToMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 

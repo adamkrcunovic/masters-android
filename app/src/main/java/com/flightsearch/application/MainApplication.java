@@ -28,11 +28,11 @@ public class MainApplication extends Application implements ApplicationConstants
     }
 
     public boolean isUserFirstTimeAppOpening() {
-        boolean firstTimeOpening = sharedPreferences.getBoolean(APP_FIRST_TIME_OPENING, true);
-        if (firstTimeOpening) {
-            sharedPreferences.edit().putBoolean(APP_FIRST_TIME_OPENING, false).apply();
-        }
-        return firstTimeOpening;
+        return sharedPreferences.getBoolean(APP_FIRST_TIME_OPENING, true);
+    }
+
+    public void setIntroOpened() {
+        sharedPreferences.edit().putBoolean(APP_FIRST_TIME_OPENING, false).apply();
     }
 
 }

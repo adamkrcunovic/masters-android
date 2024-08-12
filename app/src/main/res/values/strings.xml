@@ -1,5 +1,25 @@
 <resources>
-    <string name="app_name">FlightSearch</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Flight Search</string>
+    <string name="hello_blank_fragment">Flight Search</string>
+
+    <string name="sign_up_hint_first_name">Name*</string>
+    <string name="sign_up_hint_last_name">Last Name*</string>
+    <string name="sign_up_hint_email">Email*</string>
+    <string name="sign_up_hint_birthday">Birthday*</string>
+    <string name="sign_up_hint_country">Country*</string>
+    <string name="sign_up_hint_password">Password*</string>
+    <string name="sign_up_hint_password_confirm">Password Confirm*</string>
+    <string name="password_requirements">Create a password with these requirements</string>
+    <string name="string_requirements_separator">|</string>
+    <string name="string_requirements_abc_up">ABC</string>
+    <string name="string_requirements_abc_low">abc</string>
+    <string name="string_requirements_numbers">123</string>
+    <string name="string_requirements_special_chars">!@%.</string>
+    <string name="string_requirements_char_number">8 characters</string>
+
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_email">Email is invalid</string>
+    <string name="error_password_requirements">Password does not match all requirements</string>
+    <string name="error_invalid_birthday_date">Birthday date is invalid</string>
+    <string name="error_password_mismatch">Password mismatch</string>
 </resources>

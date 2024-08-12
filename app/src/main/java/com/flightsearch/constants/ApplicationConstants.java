@@ -10,4 +10,13 @@ public interface ApplicationConstants {
 
     public static final String IMAGE_INDEX = "IMAGE_INDEX";
 
+    public static final String INVERSE_USER_ENTRY_PAGES = "INVERSE_USER_ENTRY_PAGES";
+    public static final String NEXT_USER_ENTRY_PAGE = "NEXT_USER_ENTRY_PAGE";
+
+    public static final int PASSWORD_MIN_REQUIREMENTS = 8;
+    public static final int PASSWORD_MAX_REQUIREMENTS = Integer.MAX_VALUE;
+    public static final int PASSWORD_STRENGTH_NEUTRAL = 2;
+    public static final int PASSWORD_STRENGTH_CORRECT = 1;
+    public static final int PASSWORD_STRENGTH_INCORRECT = 0;
+
 }

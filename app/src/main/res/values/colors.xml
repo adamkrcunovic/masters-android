@@ -9,4 +9,10 @@
 
     <color name="app_grey">#10292929</color>
     <color name="app_text">#4E4E4E</color>
+
+
+    <color name="color_password_requirements">#050505</color>
+    <color name="color_password_strength_good">#00c853</color>
+    <color name="color_password_strength_bad">#FF0000</color>
+
 </resources>

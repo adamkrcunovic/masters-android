@@ -9,6 +9,6 @@ import retrofit2.http.POST;
 public interface FlightSearchServicesApi {
 
     @POST("api/account/register")
-    Call<Void> register(@Body InRegisterDTO inRegisterDTO);
+    Call<String> register(@Body InRegisterDTO inRegisterDTO);
 
 }

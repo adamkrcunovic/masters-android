@@ -1,5 +1,6 @@
 package com.flightsearch.ui.intro.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flightsearch.R;
+import com.flightsearch.constants.ApplicationConstants;
 import com.flightsearch.databinding.FragmentIntroLastBinding;
+import com.flightsearch.ui.userEntry.activity.UserEntryActivity;
+import com.flightsearch.utils.base.BaseFragment;
 
-public class IntroLastFragment extends Fragment {
+public class IntroLastFragment extends BaseFragment implements ApplicationConstants {
 
     FragmentIntroLastBinding binding;
 
@@ -33,11 +37,13 @@ public class IntroLastFragment extends Fragment {
 
     private void setOnClickListeners() {
         binding.materialButtonRegister.setOnClickListener(v -> {
-
+            startActivity((new Intent(getActivity(), UserEntryActivity.class)).putExtra(NEXT_USER_ENTRY_PAGE, UserEntryActivity.NavigationMode.GO_TO_HOME.getValue()).putExtra(INVERSE_USER_ENTRY_PAGES, false));
+            getActivity().finish();
         });
 
         binding.materialButtonSignIn.setOnClickListener(v -> {
-
+            startActivity((new Intent(getActivity(), UserEntryActivity.class)).putExtra(NEXT_USER_ENTRY_PAGE, UserEntryActivity.NavigationMode.GO_TO_HOME.getValue()).putExtra(INVERSE_USER_ENTRY_PAGES, true));
+            getActivity().finish();
         });
     }
 }
