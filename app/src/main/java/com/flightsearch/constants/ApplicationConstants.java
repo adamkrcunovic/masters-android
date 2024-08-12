@@ -8,4 +8,6 @@ public interface ApplicationConstants {
     public static final String USER_AUTHORIZATION_TOKEN = "USER_AUTHORIZATION_TOKEN";
     public static final String APP_FIRST_TIME_OPENING = "APP_FIRST_TIME_OPENING";
 
+    public static final String IMAGE_INDEX = "IMAGE_INDEX";
+
 }

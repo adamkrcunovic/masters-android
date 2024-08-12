@@ -58,7 +58,7 @@ public class SplashActivity extends BaseActivity {
                     if (application.isUserFirstTimeAppOpening()) {
                         startActivity(new Intent(SplashActivity.this, IntroActivity.class));
                     } else {
-                        startActivity(new Intent(SplashActivity.this, UserEntryActivity.class));
+                        startActivity(new Intent(SplashActivity.this, IntroActivity.class));
                     }
                 }
                 finish();
@@ -70,7 +70,6 @@ public class SplashActivity extends BaseActivity {
         /*binding.button.setOnClickListener(v -> {
             InRegisterDTO inRegisterDTO = new InRegisterDTO();
             inRegisterDTO.setEmail("aa@aa.com");
-            inRegisterDTO.setPassword("Adam123!");
             inRegisterDTO.setName("Aa");
             inRegisterDTO.setLastName("Bb");
             inRegisterDTO.setBirthday("1997-12-12");
