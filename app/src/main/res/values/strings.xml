@@ -22,4 +22,9 @@
     <string name="error_password_requirements">Password does not match all requirements</string>
     <string name="error_invalid_birthday_date">Birthday date is invalid</string>
     <string name="error_password_mismatch">Password mismatch</string>
+
+    <string name="search_to">To*</string>
+    <string name="search_departure">Departure*</string>
+    <string name="search_arrival">Arrival*</string>
+    <string name="search_from">From*</string>
 </resources>
