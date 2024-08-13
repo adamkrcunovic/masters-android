@@ -16,13 +16,23 @@ import com.flightsearch.R;
 import com.flightsearch.databinding.BottomSheetInfoBinding;
 import com.flightsearch.databinding.FragmentSearchBinding;
 import com.flightsearch.ui.main.activity.MainActivity;
+import com.flightsearch.utils.base.bottomSheet.BottomSheetChooseRadio;
 import com.flightsearch.utils.base.bottomSheet.BottomSheetInfo;
+import com.flightsearch.utils.models.helper.DayDTO;
+import com.flightsearch.utils.models.helper.MonthDTO;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.Collections;
 
 public class SearchFragment extends Fragment {
 
     FragmentSearchBinding binding;
     MainActivity activity;
+
+    MonthDTO selectedMonth = null;
+    DayDTO selectedDay = null;
+    BottomSheetChooseRadio bottomSheetChooseRadioMonth;
+    BottomSheetChooseRadio bottomSheetChooseRadioDay;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,8 +55,11 @@ public class SearchFragment extends Fragment {
             setDatesAllConstraintVisibility(binding.constraintLayoutExactDates);
         });
         binding.materialButtonMonthInActive.setOnClickListener(v -> {
-            setAllButtonsInactiveAndOneActive(binding.materialButtonMonthActive, binding.materialButtonMonthInActive);
-            setDatesAllConstraintVisibility(binding.constraintLayoutDatesInMonth);
+            selectedMonth = null;
+            showSelectMonthBottomSheet();
+        });
+        binding.materialButtonMonthChange.setOnClickListener(v -> {
+            showSelectMonthBottomSheet();
         });
         binding.materialButtonPublicHolidayInActive.setOnClickListener(v -> {
             setAllButtonsInactiveAndOneActive(binding.materialButtonPublicHolidayActive, binding.materialButtonPublicHolidayInActive);
@@ -100,6 +113,15 @@ public class SearchFragment extends Fragment {
             BottomSheetInfo bottomSheetInfo = new BottomSheetInfo("Fly night before explanation", "For those who don't want to spend one more day off on work, we present 'Fly the night before' feature that includes flights from day before but filtered after 18:00h");
             bottomSheetInfo.show(activity);
         });
+        binding.radioButtonDaysCount.setOnClickListener(v -> {
+            showSelectDaysBottomSheet();
+        });
+        binding.radioButtonLongWeekend.setOnClickListener(v -> {
+            binding.radioButtonDaysCount.setText("Days Count");
+        });
+        binding.radioButtonDoubleWeekend.setOnClickListener(v -> {
+            binding.radioButtonDaysCount.setText("Days Count");
+        });
     }
 
     private void setAllButtonsInactiveAndOneActive(MaterialButton activeButton, MaterialButton inactiveButton) {
@@ -136,5 +158,40 @@ public class SearchFragment extends Fragment {
         binding.textInputLayoutToDate.setVisibility(isDirect ? View.GONE : View.VISIBLE);
         binding.textViewReturnFlight.setVisibility(isDirect ? View.VISIBLE : View.GONE);
         binding.textViewDirectFlight.setVisibility(isDirect ? View.GONE : View.VISIBLE);
+    }
+
+    private void showSelectMonthBottomSheet() {
+        if (bottomSheetChooseRadioMonth == null) {
+            bottomSheetChooseRadioMonth = new BottomSheetChooseRadio(Collections.singletonList(MonthDTO.getNext12Months()), activity, new BottomSheetChooseRadio.OnObjectSelectListener() {
+                @Override
+                public void onObjectSelectChangeListener(Object o) {
+                    selectedMonth = (MonthDTO) o;
+                    setAllButtonsInactiveAndOneActive(binding.materialButtonMonthActive, binding.materialButtonMonthInActive);
+                    setDatesAllConstraintVisibility(binding.constraintLayoutDatesInMonth);
+                    binding.textViewChosenMonth.setText(selectedMonth.monthAndYear);
+                    bottomSheetChooseRadioMonth.dismiss();
+                }
+            }, "Select month", selectedMonth);
+        } else {
+            bottomSheetChooseRadioMonth.setSelectedItem(selectedMonth);
+        }
+        bottomSheetChooseRadioMonth.show(activity);
+    }
+
+    private void showSelectDaysBottomSheet() {
+        if (selectedDay != null) binding.radioButtonDaysCount.setText(selectedDay.dayString + ".\nTap to change!");
+        if (bottomSheetChooseRadioDay == null) {
+            bottomSheetChooseRadioDay = new BottomSheetChooseRadio(Collections.singletonList(DayDTO.getDays()), activity, new BottomSheetChooseRadio.OnObjectSelectListener() {
+                @Override
+                public void onObjectSelectChangeListener(Object o) {
+                    selectedDay = (DayDTO) o;
+                    binding.radioButtonDaysCount.setText(selectedDay.dayString + ".\nTap to change!");
+                    bottomSheetChooseRadioDay.dismiss();
+                }
+            }, "Select number of days", selectedDay);
+        } else {
+            bottomSheetChooseRadioDay.setSelectedItem(selectedDay);
+        }
+        bottomSheetChooseRadioDay.show(activity);
     }
 }

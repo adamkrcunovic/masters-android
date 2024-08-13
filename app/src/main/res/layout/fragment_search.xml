@@ -599,11 +599,13 @@
                                 android:text="Days Count"/>
 
                             <RadioButton
+                                android:id="@+id/radioButtonLongWeekend"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Long Weekend"/>
 
                             <RadioButton
+                                android:id="@+id/radioButtonDoubleWeekend"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Double Weekend"/>
