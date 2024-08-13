@@ -11,138 +11,150 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="Start searching flight deals!"
-            android:fontFamily="@font/roboto_bold"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:layout_marginTop="48dp"/>
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
+            android:layout_marginHorizontal="32dp"
             android:backgroundTint="@color/white"
             app:cardCornerRadius="15dp"
-            app:layout_constraintTop_toBottomOf="@id/textView_title"
-            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="64dp"
             app:strokeColor="@color/black"
             app:strokeWidth="0.5dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="8dp">
+                android:paddingBottom="8dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout_buttonExactDate"
-                    android:layout_width="0dp"
+                    android:id="@+id/constraintLayout_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/constraintLayout_buttonMonth"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="16dp"
-                    >
+                    android:background="@color/bottom_sheet_appbar_color"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/materialButton_exactDatesActive"
-                        style="@style/Theme.FlightSearch.Button.Filled"
+                    <TextView
+                        android:id="@+id/textView_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Exact Date"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:textSize="12sp"/>
+                        android:text="Start searching flight deals!"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:backgroundTint="@color/white"
+                        android:gravity="center"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="4dp"/>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/materialButton_exactDatesInActive"
-                        style="@style/Theme.FlightSearch.Button.Outline.Oval"
-                        android:layout_width="match_parent"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout_buttonExactDate"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Exact Date"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:visibility="gone"
-                        android:textSize="12sp"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/textView_title"
+                        app:layout_constraintEnd_toStartOf="@id/constraintLayout_buttonMonth"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="16dp"
+                        >
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/materialButton_exactDatesActive"
+                            style="@style/Theme.FlightSearch.Button.Filled"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Exact Date"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textSize="12sp"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/materialButton_exactDatesInActive"
+                            style="@style/Theme.FlightSearch.Button.Outline.Oval.WhiteBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Exact Date"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:visibility="gone"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout_buttonMonth"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/constraintLayout_buttonExactDate"
+                        app:layout_constraintTop_toBottomOf="@id/textView_title"
+                        app:layout_constraintEnd_toStartOf="@id/constraintLayout_buttonPublicHoliday"
+                        android:layout_marginHorizontal="8dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/materialButton_monthActive"
+                            style="@style/Theme.FlightSearch.Button.Filled"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Month"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:visibility="gone"
+                            android:textSize="12sp"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/materialButton_monthInActive"
+                            style="@style/Theme.FlightSearch.Button.Outline.Oval.WhiteBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Month"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout_buttonPublicHoliday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/constraintLayout_buttonMonth"
+                        app:layout_constraintTop_toBottomOf="@id/textView_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/materialButton_publicHolidayActive"
+                            style="@style/Theme.FlightSearch.Button.Filled"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Days Off"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:visibility="gone"
+                            android:textSize="12sp"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/materialButton_publicHolidayInActive"
+                            style="@style/Theme.FlightSearch.Button.Outline.Oval.WhiteBackground"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Days Off"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:textSize="12sp"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:id="@+id/view"
+                        android:layout_width="0dp"
+                        android:layout_height="0.5dp"
+                        android:background="@color/black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/constraintLayout_buttonExactDate"
+                        android:layout_marginTop="8dp"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout_buttonMonth"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toEndOf="@id/constraintLayout_buttonExactDate"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/constraintLayout_buttonPublicHoliday"
-                    android:layout_marginHorizontal="8dp">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/materialButton_monthActive"
-                        style="@style/Theme.FlightSearch.Button.Filled"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Month"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:visibility="gone"
-                        android:textSize="12sp"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/materialButton_monthInActive"
-                        style="@style/Theme.FlightSearch.Button.Outline.Oval"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Month"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:textSize="12sp"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout_buttonPublicHoliday"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toEndOf="@id/constraintLayout_buttonMonth"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="16dp">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/materialButton_publicHolidayActive"
-                        style="@style/Theme.FlightSearch.Button.Filled"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Days Off"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:visibility="gone"
-                        android:textSize="12sp"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/materialButton_publicHolidayInActive"
-                        style="@style/Theme.FlightSearch.Button.Outline.Oval"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Days Off"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:textSize="12sp"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="0dp"
-                    android:layout_height="0.5dp"
-                    android:background="@color/black"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/constraintLayout_buttonExactDate"
-                    android:layout_marginTop="6dp"/>
 
                 <TextView
                     android:id="@+id/textView_adults"
@@ -153,7 +165,7 @@
                     android:text="Adults:"
                     android:textColor="@color/black_80"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view"
+                    app:layout_constraintTop_toBottomOf="@id/constraintLayout_title"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"/>
 
@@ -164,7 +176,7 @@
                     android:src="@drawable/ic_remove"
                     app:tint="@color/app_blue"
                     app:layout_constraintEnd_toStartOf="@id/textView_adultsNumber"
-                    app:layout_constraintTop_toBottomOf="@id/view"
+                    app:layout_constraintTop_toBottomOf="@id/constraintLayout_title"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"/>
 
@@ -176,7 +188,7 @@
                     android:fontFamily="@font/roboto_bold"
                     android:text="1"
                     android:textColor="@color/black_80"
-                    app:layout_constraintTop_toBottomOf="@id/view"
+                    app:layout_constraintTop_toBottomOf="@id/constraintLayout_title"
                     app:layout_constraintEnd_toStartOf="@id/imageView_add"
                     android:layout_marginEnd="8dp"
                     android:layout_marginTop="16dp"/>
@@ -188,7 +200,7 @@
                     android:src="@drawable/ic_add"
                     app:tint="@color/app_blue"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view"
+                    app:layout_constraintTop_toBottomOf="@id/constraintLayout_title"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="20dp"/>
 
