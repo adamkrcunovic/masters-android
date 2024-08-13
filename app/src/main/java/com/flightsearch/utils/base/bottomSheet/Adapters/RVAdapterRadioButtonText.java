@@ -1,0 +1,74 @@
+package com.flightsearch.utils.base.bottomSheet.Adapters;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.flightsearch.R;
+import com.flightsearch.databinding.ViewHolderRadioButtonTextBinding;
+import com.flightsearch.utils.base.BaseActivity;
+import com.flightsearch.utils.base.MyRecyclerViewHolder;
+import com.flightsearch.utils.base.bottomSheet.BottomSheetChooseRadio;
+import com.flightsearch.utils.models.out.OutCountryDTO;
+
+import java.util.List;
+
+public class RVAdapterRadioButtonText extends RecyclerView.Adapter<MyRecyclerViewHolder<Object>> {
+
+    private List<Object> listOfObjects;
+    private BottomSheetChooseRadio.OnObjectSelectListener listener;
+    private Object selectedItem;
+
+    public RVAdapterRadioButtonText(List<Object> listOfObjects, BottomSheetChooseRadio.OnObjectSelectListener listener, Object selectedItem) {
+        this.listOfObjects = (List<Object>) listOfObjects.get(0);
+        this.listener = listener;
+        this.selectedItem = selectedItem;
+    }
+
+    @NonNull
+    @Override
+    public MyRecyclerViewHolder<Object> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        ViewHolderRadioButtonTextBinding viewHolderRadioButtonTextBinding = ViewHolderRadioButtonTextBinding.inflate(layoutInflater, parent, false);
+        return new RadioButtonViewHolder(viewHolderRadioButtonTextBinding);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyRecyclerViewHolder<Object> holder, int position) {
+        holder.bindTo(listOfObjects.get(position), position);
+    }
+
+    @Override
+    public int getItemCount() {
+        return listOfObjects.size();
+    }
+
+    protected class RadioButtonViewHolder extends MyRecyclerViewHolder<Object> {
+
+        ViewHolderRadioButtonTextBinding binding;
+
+        public RadioButtonViewHolder(ViewHolderRadioButtonTextBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        @Override
+        public void bindTo(Object item, int position) {
+            super.bindTo(item, position);
+            binding.view.setVisibility(getAdapterPosition() == listOfObjects.size() - 1 ? View.GONE : View.VISIBLE);
+            if (item instanceof OutCountryDTO) {
+                OutCountryDTO country = (OutCountryDTO) item;
+                binding.textViewRadioButtonText.setText(country.getCountryName());
+            }
+            binding.checkbox.setButtonDrawable(com.flightsearch.R.drawable.custom_checkbox_circle);
+            binding.checkbox.setChecked(selectedItem == item);
+            binding.constraintLayoutCard.setOnClickListener(v -> {
+                listener.onObjectSelectChangeListener(item);
+            });
+        }
+    }
+
+}

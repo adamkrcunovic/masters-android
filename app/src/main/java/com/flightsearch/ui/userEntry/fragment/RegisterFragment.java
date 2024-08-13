@@ -1,5 +1,6 @@
 package com.flightsearch.ui.userEntry.fragment;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -23,11 +24,14 @@ import com.flightsearch.application.MainApplication;
 import com.flightsearch.constants.ApplicationConstants;
 import com.flightsearch.databinding.FragmentRegisterBinding;
 import com.flightsearch.ui.userEntry.activity.UserEntryActivity;
+import com.flightsearch.utils.base.bottomSheet.BottomSheetChooseRadio;
 import com.flightsearch.utils.helpers.HelperMethods;
 import com.flightsearch.utils.helpers.PasswordStrengthCalculatorHelper;
 import com.flightsearch.utils.models.in.InRegisterDTO;
+import com.flightsearch.utils.models.out.OutCountryDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 import java.util.Calendar;
+import java.util.Collections;
 
 import javax.inject.Inject;
 
@@ -54,6 +58,8 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
     private TextWatcher tw;
     private Boolean hasPasswordFocus = true;
 
+    private OutCountryDTO selectedCountry = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,11 +72,16 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        callCountries();
         setPasswordHelper();
         setTextWatcher();
         setOnFocusChangeListeners();
         setOnClickListeners();
         setPasswordStrengthColorsListener();
+    }
+
+    private void callCountries() {
+        application.getAllCountriesApiCall();
     }
 
     private void setPasswordHelper() {
@@ -203,6 +214,10 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
         if (TextUtils.isEmpty(binding.textInputEditTextLastName.getText())) binding.textInputLayoutLastName.setError(activity.getString(R.string.error_field_required));
     }
 
+    private void setCountryErrors() {
+        if (TextUtils.isEmpty(binding.textInputEditTextCountry.getText())) binding.textInputLayoutCountry.setError(activity.getString(R.string.error_field_required));
+    }
+
     private void setEmailErrors() {
         if (TextUtils.isEmpty(binding.textInputEditTextEmail.getText())) binding.textInputLayoutEmail.setError(activity.getString(R.string.error_field_required));
         else if (!HelperMethods.isValidEmail(binding.textInputEditTextEmail.getText().toString())) binding.textInputLayoutEmail.setError(activity.getString(R.string.error_invalid_email));
@@ -280,15 +295,35 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
         setBirthdayErrors();
         setPasswordErrors();
         setConfirmPasswordErrors();
+        setCountryErrors();
         return binding.textInputLayoutFirstName.getError() == null
                 && binding.textInputLayoutLastName.getError() == null
                 && binding.textInputLayoutEmail.getError() == null
                 && binding.textInputLayoutBirthday.getError() == null
                 && binding.textInputLayoutPassword.getError() == null
-                && binding.textInputLayoutConfirmPassword.getError() == null;
+                && binding.textInputLayoutConfirmPassword.getError() == null
+                && binding.textInputLayoutCountry.getError() == null;
     }
 
+    BottomSheetChooseRadio bottomSheetChooseRadio;
     private void setOnClickListeners() {
+        binding.textInputEditTextCountry.setOnClickListener(v -> {
+            setCountryErrors();
+            if (bottomSheetChooseRadio == null) {
+                bottomSheetChooseRadio = new BottomSheetChooseRadio(Collections.singletonList(application.getAllCountries()), activity, new BottomSheetChooseRadio.OnObjectSelectListener() {
+                    @Override
+                    public void onObjectSelectChangeListener(Object o) {
+                        selectedCountry = (OutCountryDTO) o;
+                        binding.textInputLayoutCountry.setError(null);
+                        binding.textInputEditTextCountry.setText(selectedCountry.getCountryName());
+                        bottomSheetChooseRadio.dismiss();
+                    }
+                }, "Select country", selectedCountry);
+            } else {
+                bottomSheetChooseRadio.setSelectedItem(selectedCountry);
+            }
+            bottomSheetChooseRadio.show(activity);
+        });
         binding.materialButtonRegister.setOnClickListener(v -> {
             HelperMethods.hideKeyboard(activity);
             setPasswordStrengthColorsByForce();
@@ -310,6 +345,7 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
         // DEVICE, COUNTRY, PREFERENCE!!!
         inRegisterDTO.setCountryId(1);
         inRegisterDTO.setDeviceId("IDD");
+        inRegisterDTO.setPreferences("IDD;");
     }
 
     private void registerAccountRequest() {
@@ -319,8 +355,8 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 activity.dismissDialog();
+                System.out.println(response.body());
                 if (response.isSuccessful()) {
-                    System.out.println(response.body());
                     activity.navigateToNextScreen();
                 }
             }

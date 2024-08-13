@@ -15,4 +15,10 @@
     <color name="color_password_strength_good">#00c853</color>
     <color name="color_password_strength_bad">#FF0000</color>
 
+    <color name="bottom_sheet_appbar_color">#F3F3F3</color>
+    <color name="bottom_sheet_top_line_background">#C4C4C4</color>
+
+    <color name="customize_separator_color">#CECECE</color>
+
+
 </resources>

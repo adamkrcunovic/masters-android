@@ -35,7 +35,7 @@ public class InRegisterDTO {
 
     @SerializedName("Preferences")
     @Expose
-    private String preferences;
+    private String preferences = "";
 
     public String getEmail() {
         return email;
