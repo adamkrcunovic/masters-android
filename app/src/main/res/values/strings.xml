@@ -25,6 +25,6 @@
 
     <string name="search_to">To*</string>
     <string name="search_departure">Departure*</string>
-    <string name="search_arrival">Arrival*</string>
+    <string name="search_arrival">Return*</string>
     <string name="search_from">From*</string>
 </resources>

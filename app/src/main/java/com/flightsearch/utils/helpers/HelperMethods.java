@@ -26,7 +26,7 @@ public class HelperMethods {
     }
 
     @SuppressLint("SimpleDateFormat")
-    public static String dateStringToStringBirthday(String date) {
+    public static String dateStringToStringBackend(String date) {
         if (TextUtils.isEmpty(date)) {
             return null;
         }

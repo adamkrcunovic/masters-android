@@ -302,7 +302,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout_multicity"
                     android:layout_width="match_parent"
@@ -397,7 +396,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <CheckBox
-                        android:id="@+id/checkBok_mixMulticity"
+                        android:id="@+id/checkBox_mixMulticity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
@@ -415,10 +414,10 @@
                         android:src="@drawable/ic_info"
                         app:tint="@color/app_blue"
                         android:layout_marginStart="4dp"
-                        app:layout_constraintBottom_toBottomOf="@id/checkBok_mixMulticity"
+                        app:layout_constraintBottom_toBottomOf="@id/checkBox_mixMulticity"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/checkBok_mixMulticity"
-                        app:layout_constraintTop_toTopOf="@id/checkBok_mixMulticity" />
+                        app:layout_constraintStart_toEndOf="@id/checkBox_mixMulticity"
+                        app:layout_constraintTop_toTopOf="@id/checkBox_mixMulticity" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -621,6 +620,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Double Weekend"/>
+
+                            <RadioButton
+                                android:id="@+id/radioButtonOneWayFlight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="One Way Flight"/>
 
                         </RadioGroup>
 

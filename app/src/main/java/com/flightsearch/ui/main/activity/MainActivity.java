@@ -9,6 +9,9 @@ import com.flightsearch.R;
 import com.flightsearch.databinding.ActivityMainBinding;
 import com.flightsearch.utils.base.BaseActivity;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends BaseActivity {
 
     private ActivityMainBinding binding;

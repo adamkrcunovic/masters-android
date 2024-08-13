@@ -1,6 +1,5 @@
 package com.flightsearch.ui.userEntry.fragment;
 
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -340,7 +339,7 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
         inRegisterDTO.setName(binding.textInputEditTextFirstName.getText().toString());
         inRegisterDTO.setLastName(binding.textInputEditTextLastName.getText().toString());
         inRegisterDTO.setEmail(binding.textInputEditTextEmail.getText().toString());
-        inRegisterDTO.setBirthday(HelperMethods.dateStringToStringBirthday(binding.textInputEditTextBirthday.getText().toString()));
+        inRegisterDTO.setBirthday(HelperMethods.dateStringToStringBackend(binding.textInputEditTextBirthday.getText().toString()));
         inRegisterDTO.setPassword(binding.textInputEditTextPassword.getText().toString());
         // DEVICE, COUNTRY, PREFERENCE!!!
         inRegisterDTO.setCountryId(1);

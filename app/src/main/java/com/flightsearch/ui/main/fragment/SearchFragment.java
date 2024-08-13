@@ -13,26 +13,47 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.flightsearch.R;
-import com.flightsearch.databinding.BottomSheetInfoBinding;
 import com.flightsearch.databinding.FragmentSearchBinding;
 import com.flightsearch.ui.main.activity.MainActivity;
 import com.flightsearch.utils.base.bottomSheet.BottomSheetChooseRadio;
 import com.flightsearch.utils.base.bottomSheet.BottomSheetInfo;
+import com.flightsearch.utils.helpers.HelperMethods;
+import com.flightsearch.utils.models.enums.FlightSearchType;
 import com.flightsearch.utils.models.helper.DayDTO;
 import com.flightsearch.utils.models.helper.MonthDTO;
+import com.flightsearch.utils.models.in.InFlightSearchDTO;
+import com.flightsearch.utils.models.out.OutDatePairsDTO;
+import com.flightsearch.utils.models.out.OutFlightDTO;
+import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.Collections;
+import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+@AndroidEntryPoint
 public class SearchFragment extends Fragment {
 
-    FragmentSearchBinding binding;
-    MainActivity activity;
+    @Inject
+    FlightSearchServicesApi api;
 
-    MonthDTO selectedMonth = null;
-    DayDTO selectedDay = null;
-    BottomSheetChooseRadio bottomSheetChooseRadioMonth;
-    BottomSheetChooseRadio bottomSheetChooseRadioDay;
+    private FragmentSearchBinding binding;
+    private MainActivity activity;
+
+    private MonthDTO selectedMonth = null;
+    private DayDTO selectedDay = null;
+    private OutDatePairsDTO selectedDatePair = null;
+    private BottomSheetChooseRadio bottomSheetChooseRadioMonth;
+    private BottomSheetChooseRadio bottomSheetChooseRadioDay;
+    private BottomSheetChooseRadio bottomSheetChooseDatePair;
+
+    private InFlightSearchDTO flightSearchDTO;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +77,9 @@ public class SearchFragment extends Fragment {
         });
         binding.materialButtonMonthInActive.setOnClickListener(v -> {
             selectedMonth = null;
+            selectedDay = null;
+            binding.radioButtonDaysCount.setText("Days Count");
+            binding.radioGroupMonth.clearCheck();
             showSelectMonthBottomSheet();
         });
         binding.materialButtonMonthChange.setOnClickListener(v -> {
@@ -71,6 +95,7 @@ public class SearchFragment extends Fragment {
             binding.textViewTrip1.setText("Trip 1:");
             setFlyNightBeforeVisibility(false);
             setDirectFlightVisibility(false);
+            if (binding.radioButtonOneWayFlight.isChecked()) binding.radioGroupMonth.clearCheck();
         });
         binding.textViewRemoveMulticity.setOnClickListener(v -> {
             binding.constraintLayoutMulticity.setVisibility(View.GONE);
@@ -121,6 +146,18 @@ public class SearchFragment extends Fragment {
         });
         binding.radioButtonDoubleWeekend.setOnClickListener(v -> {
             binding.radioButtonDaysCount.setText("Days Count");
+        });
+        binding.radioButtonOneWayFlight.setOnClickListener(v -> {
+            binding.radioButtonDaysCount.setText("Days Count");
+            binding.constraintLayoutMulticity.setVisibility(View.GONE);
+            binding.textViewAddMulticity.setVisibility(View.VISIBLE);
+            binding.textViewTrip1.setText("Trip:");
+            setFlyNightBeforeVisibility(true);
+        });
+        binding.materialButtonSearch.setOnClickListener(v -> {
+            if (binding.constraintLayoutDaysOff.getVisibility() == View.VISIBLE) {
+                getDatePairs();
+            }
         });
     }
 
@@ -193,5 +230,96 @@ public class SearchFragment extends Fragment {
             bottomSheetChooseRadioDay.setSelectedItem(selectedDay);
         }
         bottomSheetChooseRadioDay.show(activity);
+    }
+
+    private void setFlightSearchDTO() {
+        flightSearchDTO = new InFlightSearchDTO();
+        flightSearchDTO.setAdults(Integer.parseInt(binding.textViewAdultsNumber.getText().toString()));
+        if (binding.constraintLayoutExactDates.getVisibility() == View.VISIBLE || binding.constraintLayoutDaysOff.getVisibility() == View.VISIBLE) {
+            flightSearchDTO.setFlightSearchType(FlightSearchType.ExactDate.ordinal());
+            if (binding.constraintLayoutExactDates.getVisibility() == View.VISIBLE) {
+                flightSearchDTO.setDepartureDay(HelperMethods.dateStringToStringBackend(binding.textInputEditTextToDate.getText().toString()));
+                if (binding.textInputLayoutFromDate.getVisibility() == View.VISIBLE) {
+                    flightSearchDTO.setReturnDay(HelperMethods.dateStringToStringBackend(binding.textInputEditTextFromDate.getText().toString()));
+                }
+            }
+            if (binding.constraintLayoutDaysOff.getVisibility() == View.VISIBLE) {
+                flightSearchDTO.setDepartureDay(selectedDatePair.getStartDate());
+                flightSearchDTO.setReturnDay(selectedDatePair.getEndDate());
+            }
+        }
+        if (binding.constraintLayoutDatesInMonth.getVisibility() == View.VISIBLE) {
+            flightSearchDTO.setMonth(selectedMonth.month + 1);
+            flightSearchDTO.setYear(selectedMonth.year);
+            if (binding.radioButtonOneWayFlight.isChecked()) {
+                flightSearchDTO.setFlightSearchType(FlightSearchType.MonthDirectFlight.ordinal());
+            }
+            if (binding.radioButtonDaysCount.isChecked()) {
+                flightSearchDTO.setFlightSearchType(FlightSearchType.DurationInMonth.ordinal());
+                flightSearchDTO.setTripDuration(selectedDay.count);
+            }
+            if (binding.radioButtonLongWeekend.isChecked()) {
+                flightSearchDTO.setFlightSearchType(FlightSearchType.LongWeekendInMonth.ordinal());
+            }
+            if (binding.radioButtonDoubleWeekend.isChecked()) {
+                flightSearchDTO.setFlightSearchType(FlightSearchType.DoubleLongWeekendInMonth.ordinal());
+            }
+        }
+        flightSearchDTO.setFromAirport(binding.textInputEditTextFrom1.getText().toString());
+        if (binding.constraintLayoutMulticity.getVisibility() == View.VISIBLE) {
+            flightSearchDTO.setMultiCity1(binding.textInputEditTextTo1.getText().toString());
+            flightSearchDTO.setMultiCity2(binding.textInputEditTextFrom2.getText().toString());
+            flightSearchDTO.setToAirport(binding.textInputEditTextTo2.getText().toString());
+            flightSearchDTO.setMixMultiCity(binding.checkBoxMixMulticity.isChecked());
+        } else {
+            flightSearchDTO.setToAirport(binding.textInputEditTextTo1.getText().toString());
+            flightSearchDTO.setFlyTheNightBefore(binding.checkBoxFlyNightBefore.isChecked());
+        }
+    }
+
+    private void getDatePairs() {
+        activity.showDialog();
+        api.getDatePairs(Integer.parseInt(binding.textViewTotalDaysNumber.getText().toString()), Integer.parseInt(binding.textViewDaysOffNumber.getText().toString())).enqueue(new Callback<List<OutDatePairsDTO>>() {
+            @Override
+            public void onResponse(Call<List<OutDatePairsDTO>> call, Response<List<OutDatePairsDTO>> response) {
+                activity.dismissDialog();
+                if (response.isSuccessful()) {
+                    bottomSheetChooseDatePair = new BottomSheetChooseRadio(Collections.singletonList(response.body()), activity, new BottomSheetChooseRadio.OnObjectSelectListener() {
+                        @Override
+                        public void onObjectSelectChangeListener(Object o) {
+                            selectedDatePair = (OutDatePairsDTO) o;
+                            bottomSheetChooseDatePair.dismiss();
+                            setFlightSearchDTO();
+                            searchFlight();
+                        }
+                    }, "Select date pair", null);
+                    bottomSheetChooseDatePair.show(activity);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<OutDatePairsDTO>> call, Throwable throwable) {
+                activity.dismissDialog();
+            }
+        });
+    }
+
+    private void searchFlight() {
+        activity.showDialog();
+        System.out.println(flightSearchDTO.toString());
+        api.getFlightDeals(flightSearchDTO).enqueue(new Callback<OutFlightDTO>() {
+            @Override
+            public void onResponse(Call<OutFlightDTO> call, Response<OutFlightDTO> response) {
+                activity.dismissDialog();
+                if (response.isSuccessful()) {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OutFlightDTO> call, Throwable throwable) {
+                activity.dismissDialog();
+            }
+        });
     }
 }
