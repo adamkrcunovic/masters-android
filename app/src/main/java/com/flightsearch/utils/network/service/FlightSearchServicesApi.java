@@ -6,6 +6,7 @@ import com.flightsearch.utils.models.in.InRegisterDTO;
 import com.flightsearch.utils.models.out.OutCountryDTO;
 import com.flightsearch.utils.models.out.OutDatePairsDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
+import com.flightsearch.utils.models.out.OutUserDTO;
 
 import java.util.List;
 
@@ -29,6 +30,9 @@ public interface FlightSearchServicesApi {
     @PUT("api/account/logout/{deviceId}")
     Call<Void> signOut(@Path("deviceId") String deviceId);
 
+    @GET("api/account/getUserData")
+    Call<OutUserDTO> getUserData();
+
     @GET("api/country")
     Call<List<OutCountryDTO>> getCountries();
 
@@ -37,5 +41,8 @@ public interface FlightSearchServicesApi {
 
     @PATCH("api/flights/search")
     Call<OutFlightDTO> getFlightDeals(@Body InFlightSearchDTO inFlightSearchDTO);
+
+    @GET("api/friend/search/{searchTerm}")
+    Call<List<OutUserDTO>> searchUsers(@Path("searchTerm") String searchTerm);
 
 }

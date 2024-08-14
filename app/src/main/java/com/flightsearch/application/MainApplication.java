@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.flightsearch.constants.ApplicationConstants;
 import com.flightsearch.utils.models.out.OutCountryDTO;
+import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ApplicationConstants
     FlightSearchServicesApi api;
 
     private List<OutCountryDTO> allCountries;
+    private OutUserDTO currentUser;
 
     public boolean isUserLogged() {
         return sharedPreferences.getString(USER_AUTHORIZATION_TOKEN, null) != null;
@@ -69,5 +71,25 @@ public class MainApplication extends Application implements ApplicationConstants
 
             }
         });
+    }
+
+    public void getUser() {
+        api.getUserData().enqueue(new Callback<OutUserDTO>() {
+            @Override
+            public void onResponse(Call<OutUserDTO> call, Response<OutUserDTO> response) {
+                if (response.isSuccessful()) {
+                    currentUser = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OutUserDTO> call, Throwable throwable) {
+
+            }
+        });
+    }
+
+    public OutUserDTO getCurrentUser() {
+        return currentUser;
     }
 }

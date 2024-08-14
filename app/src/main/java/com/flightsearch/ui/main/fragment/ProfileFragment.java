@@ -102,5 +102,8 @@ public class ProfileFragment extends BaseFragment implements ApplicationConstant
             });
             alertDialog.show();
         });
+        binding.materialButtonAddFriends.setOnClickListener(v -> {
+            activity.getNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToSearchFriendsFragment());
+        });
     }
 }

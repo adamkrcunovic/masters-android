@@ -10,13 +10,19 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 
 import com.flightsearch.R;
+import com.flightsearch.application.MainApplication;
 import com.flightsearch.databinding.ActivityMainBinding;
 import com.flightsearch.utils.base.BaseActivity;
+
+import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class MainActivity extends BaseActivity {
+
+    @Inject
+    MainApplication application;
 
     private ActivityMainBinding binding;
 
@@ -61,6 +67,12 @@ public class MainActivity extends BaseActivity {
                 super.onBackPressed();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (application.isUserLogged()) application.getUser();
     }
 
     public NavController getNavController() {
