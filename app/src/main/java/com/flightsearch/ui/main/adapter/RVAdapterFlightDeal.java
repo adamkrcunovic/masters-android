@@ -85,7 +85,7 @@ public class RVAdapterFlightDeal extends RecyclerView.Adapter<MyRecyclerViewHold
 
             //region return
             List<OutFlightSegmentDTO> returnSegments = item.getFromSegments();
-            if (!returnSegments.isEmpty()) {
+            if (returnSegments != null && !returnSegments.isEmpty()) {
                 binding.viewTicketSeparator1.setVisibility(View.VISIBLE);
                 binding.textViewTotalStay.setVisibility(View.VISIBLE);
                 binding.viewTicketSeparator2.setVisibility(View.VISIBLE);

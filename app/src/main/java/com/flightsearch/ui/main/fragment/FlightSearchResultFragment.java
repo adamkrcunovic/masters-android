@@ -54,8 +54,8 @@ public class FlightSearchResultFragment extends Fragment {
     private void setTabBar() {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("CHEAPEST"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("FASTEST"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("LONGEST STAY"));
-        if (!flightSearchResults.getCityVisit().isEmpty()) binding.tabLayout.addTab(binding.tabLayout.newTab().setText("CITY VISIT"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("CITY VISIT"));
+        if (flightSearchResults.getLongestStayFlights() != null && !flightSearchResults.getLongestStayFlights().isEmpty())binding.tabLayout.addTab(binding.tabLayout.newTab().setText("LONGEST STAY"));
         binding.tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -81,8 +81,8 @@ public class FlightSearchResultFragment extends Fragment {
         List<OutFlightDealDTO> flightsToShowOnScreen = new ArrayList<>();
         if (position == 0) flightsToShowOnScreen = flightSearchResults.getCheapestFlights();
         if (position == 1) flightsToShowOnScreen = flightSearchResults.getFastestFlights();
-        if (position == 2) flightsToShowOnScreen = flightSearchResults.getLongestStayFlights();
-        if (position == 3) flightsToShowOnScreen = flightSearchResults.getCityVisit();
+        if (position == 2) flightsToShowOnScreen = flightSearchResults.getCityVisit();
+        if (position == 3) flightsToShowOnScreen = flightSearchResults.getLongestStayFlights();
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
         RVAdapterFlightDeal adapter = new RVAdapterFlightDeal(flightsToShowOnScreen, new RVAdapterFlightDeal.OnFlightDealClickListener() {
