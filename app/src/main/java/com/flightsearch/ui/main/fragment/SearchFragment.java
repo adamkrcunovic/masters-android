@@ -312,7 +312,7 @@ public class SearchFragment extends Fragment {
             public void onResponse(Call<OutFlightDTO> call, Response<OutFlightDTO> response) {
                 activity.dismissDialog();
                 if (response.isSuccessful()) {
-
+                    activity.getNavController().navigate(SearchFragmentDirections.actionSearchFragmentToFlightSearchResultFragment(response.body()));
                 }
             }
 

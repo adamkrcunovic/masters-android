@@ -1,8 +1,12 @@
 package com.flightsearch.ui.main.activity;
 
 import android.os.Bundle;
+import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 
 import com.flightsearch.R;
@@ -35,6 +39,13 @@ public class MainActivity extends BaseActivity {
                 getNavController().navigate(R.id.profileFragment);
             }
             return true;
+        });
+
+        getNavController().addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController navController, @NonNull NavDestination navDestination, @Nullable Bundle bundle) {
+                binding.bottomNavigationView.setVisibility(navDestination.getId() == R.id.searchFragment || navDestination.getId() == R.id.myTripsFragment || navDestination.getId() == R.id.profileFragment ? View.VISIBLE : View.GONE);
+            }
         });
     }
 

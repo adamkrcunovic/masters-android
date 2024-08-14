@@ -3,7 +3,9 @@ package com.flightsearch.utils.models.out;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class OutFlightSegmentDTO {
+import java.io.Serializable;
+
+public class OutFlightSegmentDTO implements Serializable {
 
     @SerializedName("from")
     @Expose

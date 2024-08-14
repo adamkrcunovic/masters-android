@@ -3,9 +3,10 @@ package com.flightsearch.utils.models.out;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class OutFlightDTO {
+public class OutFlightDTO implements Serializable {
 
     @SerializedName("cheapestFlights")
     @Expose
