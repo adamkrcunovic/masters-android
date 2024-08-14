@@ -1,6 +1,7 @@
 package com.flightsearch.utils.network.service;
 
 import com.flightsearch.utils.models.in.InFlightSearchDTO;
+import com.flightsearch.utils.models.in.InLoginDTO;
 import com.flightsearch.utils.models.in.InRegisterDTO;
 import com.flightsearch.utils.models.out.OutCountryDTO;
 import com.flightsearch.utils.models.out.OutDatePairsDTO;
@@ -13,12 +14,20 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface FlightSearchServicesApi {
 
     @POST("api/account/register")
     Call<String> register(@Body InRegisterDTO inRegisterDTO);
+
+    @POST("api/account/login")
+    Call<String> signIn(@Body InLoginDTO inLoginDTO);
+
+    @PUT("api/account/logout/{deviceId}")
+    Call<Void> signOut(@Path("deviceId") String deviceId);
 
     @GET("api/country")
     Call<List<OutCountryDTO>> getCountries();

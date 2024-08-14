@@ -39,6 +39,10 @@ public class MainApplication extends Application implements ApplicationConstants
         sharedPreferences.edit().remove(USER_AUTHORIZATION_TOKEN).apply();
     }
 
+    public void storeUserAuthorizationToken(String token) {
+        sharedPreferences.edit().putString(USER_AUTHORIZATION_TOKEN, token).apply();
+    }
+
     public boolean isUserFirstTimeAppOpening() {
         return sharedPreferences.getBoolean(APP_FIRST_TIME_OPENING, true);
     }

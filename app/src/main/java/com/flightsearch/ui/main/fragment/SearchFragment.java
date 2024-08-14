@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.flightsearch.R;
+import com.flightsearch.application.MainApplication;
 import com.flightsearch.databinding.FragmentSearchBinding;
 import com.flightsearch.ui.main.activity.MainActivity;
 import com.flightsearch.utils.base.bottomSheet.BottomSheetChooseRadio;
@@ -45,6 +46,9 @@ public class SearchFragment extends Fragment {
     @Inject
     FlightSearchServicesApi api;
 
+    @Inject
+    MainApplication application;
+
     private FragmentSearchBinding binding;
     private MainActivity activity;
 
@@ -71,6 +75,16 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setOnClickListeners();
         setOnFocusChangeListeners();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setPublicHolidayButtonVisibility();
+    }
+
+    private void setPublicHolidayButtonVisibility() {
+        binding.constraintLayoutButtonPublicHoliday.setVisibility(application.isUserLogged() ? View.VISIBLE : View.GONE);
     }
 
     private void setOnClickListeners() {

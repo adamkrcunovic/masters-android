@@ -1,7 +1,10 @@
 package com.flightsearch.ui.main.fragment;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -9,58 +12,95 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flightsearch.R;
+import com.flightsearch.application.MainApplication;
+import com.flightsearch.constants.ApplicationConstants;
+import com.flightsearch.databinding.FragmentProfileBinding;
+import com.flightsearch.ui.intro.activity.IntroActivity;
+import com.flightsearch.ui.main.activity.MainActivity;
+import com.flightsearch.ui.userEntry.activity.UserEntryActivity;
+import com.flightsearch.utils.base.BaseFragment;
+import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ProfileFragment extends Fragment {
+import javax.inject.Inject;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import dagger.hilt.android.AndroidEntryPoint;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+@AndroidEntryPoint
+public class ProfileFragment extends BaseFragment implements ApplicationConstants {
 
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
+    @Inject
+    MainApplication application;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    @Inject
+    FlightSearchServicesApi api;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private FragmentProfileBinding binding;
+    private MainActivity activity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        binding = FragmentProfileBinding.bind(view);
+        activity = (MainActivity) getActivity();
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setLoggedOrGuestView();
+        setOnClickListeners();
+    }
+
+    private void setLoggedOrGuestView() {
+        binding.constraintLayoutGuest.setVisibility(application.isUserLogged() ? View.GONE : View.VISIBLE);
+        binding.constraintLayoutLogged.setVisibility(application.isUserLogged() ? View.VISIBLE : View.GONE);
+    }
+
+    private void setOnClickListeners() {
+        binding.materialButtonRegister.setOnClickListener(v -> {
+            startActivity((new Intent(getActivity(), UserEntryActivity.class)).putExtra(NEXT_USER_ENTRY_PAGE, UserEntryActivity.NavigationMode.GO_BACK.getValue()).putExtra(INVERSE_USER_ENTRY_PAGES, false));
+        });
+        binding.materialButtonSignIn.setOnClickListener(v -> {
+            startActivity((new Intent(getActivity(), UserEntryActivity.class)).putExtra(NEXT_USER_ENTRY_PAGE, UserEntryActivity.NavigationMode.GO_BACK.getValue()).putExtra(INVERSE_USER_ENTRY_PAGES, true));
+        });
+        binding.materialButtonSignOut.setOnClickListener(v -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(activity)
+                    .setTitle("Sign Out")
+                    .setMessage("Are you sure you want to sign out?")
+                    .setCancelable(false)
+                    .setPositiveButton("Sign Out", (dialog, whichButton) -> {
+                        activity.showDialog();
+                        api.signOut("device").enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                activity.dismissDialog();
+                                application.clearUserAuthorizationToken();
+                                startActivity(new Intent(activity, IntroActivity.class));
+                                activity.finish();
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable throwable) {
+                                activity.dismissDialog();
+                                startActivity(new Intent(activity, IntroActivity.class));
+                                activity.finish();
+                            }
+                        });
+                    })
+                    .setNegativeButton("Cancel", (dialog, whichButton) -> {
+                    }).create();
+            alertDialog.setOnShowListener( new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface arg0) {
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(activity.getResources().getColor(R.color.app_text));
+                }
+            });
+            alertDialog.show();
+        });
     }
 }

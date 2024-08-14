@@ -26,12 +26,12 @@ public class TokenInterceptor implements Authenticator {
     @Nullable
     @Override
     public Request authenticate(@Nullable Route route, Response response) throws IOException {
-        if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+        /*if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
             application.clearUserAuthorizationToken();
             Intent intent = new Intent(application, SplashActivity.class);
             application.startActivity(intent);
             return null;
-        }
+        }*/
         return response.request();
     }
 }

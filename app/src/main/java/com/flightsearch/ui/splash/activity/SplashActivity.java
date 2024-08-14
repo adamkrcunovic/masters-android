@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.flightsearch.R;
 import com.flightsearch.application.MainApplication;
+import com.flightsearch.constants.ApplicationConstants;
 import com.flightsearch.databinding.ActivitySplashBinding;
 import com.flightsearch.ui.intro.activity.IntroActivity;
 import com.flightsearch.ui.main.activity.MainActivity;
@@ -30,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @AndroidEntryPoint
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements ApplicationConstants {
 
     @Inject
     FlightSearchServicesApi api;
@@ -58,7 +59,7 @@ public class SplashActivity extends BaseActivity {
                     if (application.isUserFirstTimeAppOpening()) {
                         startActivity(new Intent(SplashActivity.this, IntroActivity.class));
                     } else {
-                        startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+                        startActivity((new Intent(SplashActivity.this, UserEntryActivity.class)).putExtra(NEXT_USER_ENTRY_PAGE, UserEntryActivity.NavigationMode.GO_TO_HOME.getValue()).putExtra(INVERSE_USER_ENTRY_PAGES, true));
                     }
                 }
                 finish();

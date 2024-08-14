@@ -296,8 +296,8 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 activity.dismissDialog();
-                System.out.println(response.body());
                 if (response.isSuccessful()) {
+                    application.storeUserAuthorizationToken(response.body());
                     activity.navigateToNextScreen();
                 }
             }
