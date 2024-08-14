@@ -13,9 +13,11 @@
         app:cardCornerRadius="15dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginVertical="8dp"
+        android:layout_marginTop="32dp"
         app:strokeColor="@color/black"
-        app:strokeWidth="0.5dp">
+        app:strokeWidth="0.5dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -28,7 +30,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/view_mainSeparator">
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout_departure"
@@ -69,12 +71,13 @@
                         app:layout_constraintBottom_toBottomOf="@id/view_departure1">
 
                         <TextView
+                            android:id="@+id/textView_departureDirect"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="Direct"
-                            android:padding="8dp"
-                            android:fontFamily="@font/roboto_regular"
-                            android:textColor="@color/app_text"
+                            android:paddingHorizontal="8dp"
+                            android:fontFamily="@font/roboto_bold"
+                            android:textColor="@color/app_blue"
                             android:visibility="gone"/>
 
                         <ImageView
@@ -86,7 +89,8 @@
                             app:tint="@color/app_blue"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:visibility="gone"/>
 
                         <View
                             android:id="@+id/view_departure_layover"
@@ -96,7 +100,8 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toEndOf="@id/imageView_departureStop1"
-                            app:layout_constraintEnd_toStartOf="@id/imageView_departureStop2"/>
+                            app:layout_constraintEnd_toStartOf="@id/imageView_departureStop2"
+                            android:visibility="gone"/>
 
                         <ImageView
                             android:id="@+id/imageView_departureStop2"
@@ -107,22 +112,10 @@
                             app:tint="@color/app_blue"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:visibility="gone"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:id="@+id/textView_departureFlightTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="@id/constraintLayout_departureLayovers"
-                        app:layout_constraintEnd_toEndOf="@id/constraintLayout_departureLayovers"
-                        app:layout_constraintBottom_toTopOf="@id/constraintLayout_departureLayovers"
-                        tools:text="2Hours 15Minutes"
-                        android:fontFamily="@font/roboto_light"
-                        android:textColor="@color/app_text"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="4dp"/>
 
                     <TextView
                         android:id="@+id/textView_departureLayovers"
@@ -130,8 +123,21 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="@id/constraintLayout_departureLayovers"
                         app:layout_constraintEnd_toEndOf="@id/constraintLayout_departureLayovers"
-                        app:layout_constraintTop_toBottomOf="@id/constraintLayout_departureLayovers"
+                        app:layout_constraintBottom_toTopOf="@id/constraintLayout_departureLayovers"
                         tools:text="2 Stops (AUH, VIE)"
+                        android:fontFamily="@font/roboto_light"
+                        android:textColor="@color/app_text"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textView_departureFlightTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@id/constraintLayout_departureLayovers"
+                        app:layout_constraintEnd_toEndOf="@id/constraintLayout_departureLayovers"
+                        app:layout_constraintTop_toBottomOf="@id/constraintLayout_departureLayovers"
+                        tools:text="2Hours 15Minutes"
                         android:fontFamily="@font/roboto_light"
                         android:textColor="@color/app_text"
                         android:textSize="12sp"
@@ -204,7 +210,8 @@
                     app:layout_constraintTop_toBottomOf="@id/constraintLayout_departure"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/textView_totalStay"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/textView_totalStay"
@@ -218,7 +225,8 @@
                     app:layout_constraintStart_toEndOf="@id/view_ticketSeparator1"
                     app:layout_constraintEnd_toStartOf="@id/view_ticketSeparator2"
                     app:layout_constraintTop_toTopOf="@id/view_ticketSeparator1"
-                    app:layout_constraintBottom_toBottomOf="@id/view_ticketSeparator1"/>
+                    app:layout_constraintBottom_toBottomOf="@id/view_ticketSeparator1"
+                    android:visibility="gone"/>
 
                 <View
                     android:id="@+id/view_ticketSeparator2"
@@ -228,7 +236,8 @@
                     app:layout_constraintTop_toBottomOf="@id/constraintLayout_departure"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/textView_totalStay"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp"
+                    android:visibility="gone"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout_return"
@@ -236,7 +245,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/textView_totalStay"
                     android:paddingHorizontal="12dp"
-                    android:paddingBottom="12dp">
+                    android:paddingBottom="12dp"
+                    android:visibility="gone">
 
                     <View
                         android:id="@+id/view_return1"
@@ -259,12 +269,13 @@
                         app:layout_constraintBottom_toBottomOf="@id/view_return1">
 
                         <TextView
+                            android:id="@+id/textView_returnDirect"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:text="Direct"
-                            android:padding="8dp"
-                            android:fontFamily="@font/roboto_regular"
-                            android:textColor="@color/app_text"
+                            android:paddingHorizontal="8dp"
+                            android:fontFamily="@font/roboto_bold"
+                            android:textColor="@color/app_blue"
                             android:visibility="gone"/>
 
                         <ImageView
@@ -276,7 +287,8 @@
                             app:tint="@color/app_blue"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:visibility="gone"/>
 
                         <View
                             android:id="@+id/view_return_layover"
@@ -286,7 +298,8 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toEndOf="@id/imageView_returnStop1"
-                            app:layout_constraintEnd_toStartOf="@id/imageView_returnStop2"/>
+                            app:layout_constraintEnd_toStartOf="@id/imageView_returnStop2"
+                            android:visibility="gone"/>
 
                         <ImageView
                             android:id="@+id/imageView_returnStop2"
@@ -297,22 +310,10 @@
                             app:tint="@color/app_blue"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"/>
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:visibility="gone"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <TextView
-                        android:id="@+id/textView_returnFlightTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintStart_toStartOf="@id/constraintLayout_returnLayovers"
-                        app:layout_constraintEnd_toEndOf="@id/constraintLayout_returnLayovers"
-                        app:layout_constraintBottom_toTopOf="@id/constraintLayout_returnLayovers"
-                        tools:text="2Hours 15Minutes"
-                        android:fontFamily="@font/roboto_light"
-                        android:textColor="@color/app_text"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="4dp"/>
 
                     <TextView
                         android:id="@+id/textView_returnLayovers"
@@ -320,8 +321,21 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="@id/constraintLayout_returnLayovers"
                         app:layout_constraintEnd_toEndOf="@id/constraintLayout_returnLayovers"
-                        app:layout_constraintTop_toBottomOf="@id/constraintLayout_returnLayovers"
+                        app:layout_constraintBottom_toTopOf="@id/constraintLayout_returnLayovers"
                         tools:text="2 Stops (AUH, VIE)"
+                        android:fontFamily="@font/roboto_light"
+                        android:textColor="@color/app_text"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/textView_returnFlightTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="@id/constraintLayout_returnLayovers"
+                        app:layout_constraintEnd_toEndOf="@id/constraintLayout_returnLayovers"
+                        app:layout_constraintTop_toBottomOf="@id/constraintLayout_returnLayovers"
+                        tools:text="2Hours 15Minutes"
                         android:fontFamily="@font/roboto_light"
                         android:textColor="@color/app_text"
                         android:textSize="12sp"
@@ -402,7 +416,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <View
+            <!--<View
                 android:id="@+id/view_mainSeparator"
                 android:layout_width="1dp"
                 android:layout_height="0dp"
@@ -410,24 +424,22 @@
                 app:layout_constraintStart_toEndOf="@id/constraintLayout_mainData"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/textView_price"/>
-
-            <TextView
-                android:id="@+id/textView_price"
-                android:layout_width="wrap_content"
-                android:minWidth="80dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text = "45 E"
-                android:fontFamily="@font/roboto_bold"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:gravity="center"/>
+                app:layout_constraintEnd_toStartOf="@id/textView_price"/>-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/materialButton_price"
+        style="@style/Theme.FlightSearch.Button.Filled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text = "Total 45E"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/white"
+        android:layout_marginTop="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

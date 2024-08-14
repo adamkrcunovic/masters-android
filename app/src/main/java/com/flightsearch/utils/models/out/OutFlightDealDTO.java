@@ -115,4 +115,14 @@ public class OutFlightDealDTO implements Serializable {
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    public String returnLayoversForScreen(boolean departureOrReturn) {
+        List<OutFlightSegmentDTO> selectedList = departureOrReturn ? toSegments : fromSegments;
+        int numberOfSpots = selectedList.size() - 1;
+        String returnString = numberOfSpots + " Stop" + (numberOfSpots != 1 ? "s " : " ") + "(";
+        for (int i = 0; i < numberOfSpots; i++) {
+            returnString += selectedList.get(i).getTo() + (i != numberOfSpots - 1 ? ", " : ")");
+        }
+        return returnString;
+    }
 }

@@ -41,6 +41,38 @@ public class HelperMethods {
         return requiredFormat.format(getDate);
     }
 
+    @SuppressLint("SimpleDateFormat")
+    public static String dateStringToTime(String date) {
+        if (TextUtils.isEmpty(date)) {
+            return null;
+        }
+        SimpleDateFormat existingUTCFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        SimpleDateFormat requiredFormat = new SimpleDateFormat("hh:mm");
+        Date getDate = null;
+        try {
+            getDate = existingUTCFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return requiredFormat.format(getDate);
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    public static String dateStringToDateWithName(String date) {
+        if (TextUtils.isEmpty(date)) {
+            return null;
+        }
+        SimpleDateFormat existingUTCFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+        SimpleDateFormat requiredFormat = new SimpleDateFormat("EEE dd MMM");
+        Date getDate = null;
+        try {
+            getDate = existingUTCFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return requiredFormat.format(getDate);
+    }
+
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
