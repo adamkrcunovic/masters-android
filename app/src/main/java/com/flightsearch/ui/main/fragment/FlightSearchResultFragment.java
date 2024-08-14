@@ -44,6 +44,7 @@ public class FlightSearchResultFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         getFlightSearchResults();
         setTabBar();
+        setRecyclerView(0);
     }
 
     private void getFlightSearchResults() {
@@ -53,7 +54,7 @@ public class FlightSearchResultFragment extends Fragment {
     private void setTabBar() {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("CHEAPEST"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("FASTEST"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("LONGEST"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("LONGEST STAY"));
         if (!flightSearchResults.getCityVisit().isEmpty()) binding.tabLayout.addTab(binding.tabLayout.newTab().setText("CITY VISIT"));
         binding.tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
@@ -74,7 +75,6 @@ public class FlightSearchResultFragment extends Fragment {
 
             }
         });
-        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0));
     }
 
     private void setRecyclerView(int position) {

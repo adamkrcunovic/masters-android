@@ -66,11 +66,12 @@ public class RVAdapterFlightDeal extends RecyclerView.Adapter<MyRecyclerViewHold
             //region departure
             List<OutFlightSegmentDTO> fromSegments = item.getToSegments();
             binding.textViewDepartureDate.setText("Departure - " + HelperMethods.dateStringToDateWithName(fromSegments.get(0).getDeparture()));
-            binding.textViewDepartureFlightTime.setText(item.getFromDuration());
+            binding.textViewDepartureFlightTime.setText(item.getToDuration());
             binding.textViewDepartureFromAirport.setText(fromSegments.get(0).getFrom());
             binding.textViewDepartureFromAirportTime.setText(HelperMethods.dateStringToTime(fromSegments.get(0).getDeparture()));
             binding.textViewDepartureToAirport.setText(fromSegments.get(fromSegments.size() - 1).getTo());
-            binding.textViewDepartureToAirportTime.setText(HelperMethods.dateStringToTime(fromSegments.get(fromSegments.size() - 1).getArrival()));
+            String sameDayDeparture = fromSegments.get(fromSegments.size() - 1).getArrival().split("T")[0].equals(fromSegments.get(0).getDeparture().split("T")[0]) ? "" : "(+1)";
+            binding.textViewDepartureToAirportTime.setText(HelperMethods.dateStringToTime(fromSegments.get(fromSegments.size() - 1).getArrival()) + sameDayDeparture);
             if (fromSegments.size() == 1) {
                 binding.textViewDepartureDirect.setVisibility(View.VISIBLE);
             } else {
@@ -92,11 +93,12 @@ public class RVAdapterFlightDeal extends RecyclerView.Adapter<MyRecyclerViewHold
                 binding.textViewTotalStay.setText(item.getTotalStayDuration());
 
                 binding.textViewReturnDate.setText("Return - " + HelperMethods.dateStringToDateWithName(returnSegments.get(returnSegments.size() - 1).getArrival()));
-                binding.textViewReturnFlightTime.setText(item.getToDuration());
+                binding.textViewReturnFlightTime.setText(item.getFromDuration());
                 binding.textViewReturnFromAirport.setText(returnSegments.get(0).getFrom());
                 binding.textViewReturnFromAirportTime.setText(HelperMethods.dateStringToTime(returnSegments.get(0).getDeparture()));
                 binding.textViewReturnToAirport.setText(returnSegments.get(returnSegments.size() - 1).getTo());
-                binding.textViewReturnToAirportTime.setText(HelperMethods.dateStringToTime(returnSegments.get(returnSegments.size() - 1).getArrival()));
+                String sameDayReturn = returnSegments.get(returnSegments.size() - 1).getArrival().split("T")[0].equals(returnSegments.get(0).getDeparture().split("T")[0]) ? "" : "(+1)";
+                binding.textViewReturnToAirportTime.setText(HelperMethods.dateStringToTime(returnSegments.get(returnSegments.size() - 1).getArrival()) + sameDayReturn);
                 if (returnSegments.size() == 1) {
                     binding.textViewReturnDirect.setVisibility(View.VISIBLE);
                 } else {
@@ -107,6 +109,9 @@ public class RVAdapterFlightDeal extends RecyclerView.Adapter<MyRecyclerViewHold
                     }
                     binding.textViewReturnLayovers.setText(item.returnLayoversForScreen(false));
                 }
+
+                binding.materialButtonPrice.setOnClickListener(v -> listener.onClick(item));
+                binding.materialCardView.setOnClickListener(v -> listener.onClick(item));
             }
         }
     }

@@ -26,6 +26,8 @@ import com.flightsearch.utils.models.out.OutDatePairsDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Collections;
 import java.util.List;
@@ -68,6 +70,7 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setOnClickListeners();
+        setOnFocusChangeListeners();
     }
 
     private void setOnClickListeners() {
@@ -119,10 +122,10 @@ public class SearchFragment extends Fragment {
             addOrRemoveNumberOnTetView(binding.textViewAdultsNumber, true, 1, 9);
         });
         binding.imageViewRemoveTotalDays.setOnClickListener(v -> {
-            addOrRemoveNumberOnTetView(binding.textViewTotalDaysNumber, false, 1, 25);
+            addOrRemoveNumberOnTetView(binding.textViewTotalDaysNumber, false, 3, 25);
         });
         binding.imageViewAddTotalDays.setOnClickListener(v -> {
-            addOrRemoveNumberOnTetView(binding.textViewTotalDaysNumber, true, 1, 25);
+            addOrRemoveNumberOnTetView(binding.textViewTotalDaysNumber, true, 3, 25);
         });
         binding.imageViewRemoveDaysOff.setOnClickListener(v -> {
             addOrRemoveNumberOnTetView(binding.textViewDaysOffNumber, false, 1, 25);
@@ -155,10 +158,62 @@ public class SearchFragment extends Fragment {
             setFlyNightBeforeVisibility(true);
         });
         binding.materialButtonSearch.setOnClickListener(v -> {
+            HelperMethods.hideKeyboard(activity);
+            binding.textInputLayoutTo1.setError(null);
+            binding.textInputLayoutFrom1.setError(null);
+            HelperMethods.setAirportFieldErrors(binding.textInputEditTextFrom1, binding.textInputLayoutFrom1, activity);
+            HelperMethods.setAirportFieldErrors(binding.textInputEditTextTo1, binding.textInputLayoutTo1, activity);
+            if (binding.textInputLayoutTo1.getError() != null || binding.textInputLayoutFrom1.getError() != null) {
+                return;
+            }
+
+            if (binding.constraintLayoutMulticity.getVisibility() == View.VISIBLE) {
+                binding.textInputLayoutTo2.setError(null);
+                binding.textInputLayoutFrom2.setError(null);
+                HelperMethods.setAirportFieldErrors(binding.textInputEditTextTo2, binding.textInputLayoutTo2, activity);
+                HelperMethods.setAirportFieldErrors(binding.textInputEditTextFrom2, binding.textInputLayoutFrom2, activity);
+                if (binding.textInputLayoutTo2.getError() != null || binding.textInputLayoutFrom2.getError() != null) {
+                    return;
+                }
+            }
+
+            if (binding.constraintLayoutExactDates.getVisibility() == View.VISIBLE) {
+                binding.textInputLayoutFromDate.setError(null);
+                binding.textInputLayoutToDate.setError(null);
+                HelperMethods.setDateErrors(binding.textInputEditTextFromDate, binding.textInputLayoutFromDate, activity);
+                HelperMethods.setDateErrors(binding.textInputEditTextToDate, binding.textInputLayoutToDate, activity);
+                if (binding.textInputLayoutFromDate.getError() != null || binding.textInputLayoutToDate.getError() != null) {
+                    return;
+                }
+                searchFlight();
+            }
+
+            if (binding.constraintLayoutDatesInMonth.getVisibility() == View.VISIBLE) {
+                if (binding.radioGroupMonth.getCheckedRadioButtonId() != -1) {
+                    if (binding.radioButtonDaysCount.isChecked() && selectedDay == null) {
+                        //TODO SELECT DAYS
+                        return;
+                    }
+                } else {
+                    //TODO SELECT RADIO BUTTON
+                    return;
+                }
+                searchFlight();
+            }
+
             if (binding.constraintLayoutDaysOff.getVisibility() == View.VISIBLE) {
                 getDatePairs();
             }
         });
+    }
+
+    private void setOnFocusChangeListeners() {
+        HelperMethods.setOnFocusChangeListenerAirportField(binding.textInputEditTextFrom1, binding.textInputLayoutFrom1, activity);
+        HelperMethods.setOnFocusChangeListenerAirportField(binding.textInputEditTextFrom2, binding.textInputLayoutFrom2, activity);
+        HelperMethods.setOnFocusChangeListenerAirportField(binding.textInputEditTextTo1, binding.textInputLayoutTo1, activity);
+        HelperMethods.setOnFocusChangeListenerAirportField(binding.textInputEditTextTo2, binding.textInputLayoutTo2, activity);
+        HelperMethods.setOnFocusChangeListenerDate(binding.textInputEditTextFromDate, binding.textInputLayoutFromDate, HelperMethods.setTextWatcher(binding.textInputEditTextFromDate), activity);
+        HelperMethods.setOnFocusChangeListenerDate(binding.textInputEditTextToDate, binding.textInputLayoutToDate, HelperMethods.setTextWatcher(binding.textInputEditTextToDate), activity);
     }
 
     private void setAllButtonsInactiveAndOneActive(MaterialButton activeButton, MaterialButton inactiveButton) {
@@ -238,9 +293,9 @@ public class SearchFragment extends Fragment {
         if (binding.constraintLayoutExactDates.getVisibility() == View.VISIBLE || binding.constraintLayoutDaysOff.getVisibility() == View.VISIBLE) {
             flightSearchDTO.setFlightSearchType(FlightSearchType.ExactDate.ordinal());
             if (binding.constraintLayoutExactDates.getVisibility() == View.VISIBLE) {
-                flightSearchDTO.setDepartureDay(HelperMethods.dateStringToStringBackend(binding.textInputEditTextToDate.getText().toString()));
+                flightSearchDTO.setDepartureDay(HelperMethods.dateStringToStringBackend(binding.textInputEditTextFromDate.getText().toString()));
                 if (binding.textInputLayoutFromDate.getVisibility() == View.VISIBLE) {
-                    flightSearchDTO.setReturnDay(HelperMethods.dateStringToStringBackend(binding.textInputEditTextFromDate.getText().toString()));
+                    flightSearchDTO.setReturnDay(HelperMethods.dateStringToStringBackend(binding.textInputEditTextToDate.getText().toString()));
                 }
             }
             if (binding.constraintLayoutDaysOff.getVisibility() == View.VISIBLE) {
@@ -289,7 +344,6 @@ public class SearchFragment extends Fragment {
                         public void onObjectSelectChangeListener(Object o) {
                             selectedDatePair = (OutDatePairsDTO) o;
                             bottomSheetChooseDatePair.dismiss();
-                            setFlightSearchDTO();
                             searchFlight();
                         }
                     }, "Select date pair", null);
@@ -306,7 +360,7 @@ public class SearchFragment extends Fragment {
 
     private void searchFlight() {
         activity.showDialog();
-        System.out.println(flightSearchDTO.toString());
+        setFlightSearchDTO();
         api.getFlightDeals(flightSearchDTO).enqueue(new Callback<OutFlightDTO>() {
             @Override
             public void onResponse(Call<OutFlightDTO> call, Response<OutFlightDTO> response) {

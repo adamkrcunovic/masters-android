@@ -21,6 +21,7 @@
     <string name="error_invalid_email">Email is invalid</string>
     <string name="error_password_requirements">Password does not match all requirements</string>
     <string name="error_invalid_birthday_date">Birthday date is invalid</string>
+    <string name="error_invalid_date">Date is invalid</string>
     <string name="error_password_mismatch">Password mismatch</string>
 
     <string name="search_to">To*</string>
