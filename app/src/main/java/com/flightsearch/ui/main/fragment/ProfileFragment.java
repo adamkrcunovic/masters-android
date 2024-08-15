@@ -2,6 +2,7 @@ package com.flightsearch.ui.main.fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -19,6 +20,7 @@ import com.flightsearch.ui.intro.activity.IntroActivity;
 import com.flightsearch.ui.main.activity.MainActivity;
 import com.flightsearch.ui.userEntry.activity.UserEntryActivity;
 import com.flightsearch.utils.base.BaseFragment;
+import com.flightsearch.utils.firebase.MyFirebaseMessagingService;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 
 import javax.inject.Inject;
@@ -36,6 +38,9 @@ public class ProfileFragment extends BaseFragment implements ApplicationConstant
 
     @Inject
     FlightSearchServicesApi api;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     private FragmentProfileBinding binding;
     private MainActivity activity;
@@ -75,7 +80,7 @@ public class ProfileFragment extends BaseFragment implements ApplicationConstant
                     .setCancelable(false)
                     .setPositiveButton("Sign Out", (dialog, whichButton) -> {
                         activity.showDialog();
-                        api.signOut("device").enqueue(new Callback<Void>() {
+                        api.signOut(MyFirebaseMessagingService.getDeviceId(sharedPreferences)).enqueue(new Callback<Void>() {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
                                 activity.dismissDialog();
@@ -104,6 +109,12 @@ public class ProfileFragment extends BaseFragment implements ApplicationConstant
         });
         binding.materialButtonAddFriends.setOnClickListener(v -> {
             activity.getNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToSearchFriendsFragment());
+        });
+        binding.materialButtonFriendRequests.setOnClickListener(v -> {
+            activity.getNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToFriendRequestsFragment());
+        });
+        binding.materialButtonMyAccount.setOnClickListener(v -> {
+            activity.getNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment());
         });
     }
 }

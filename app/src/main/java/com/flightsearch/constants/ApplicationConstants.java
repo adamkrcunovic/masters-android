@@ -3,7 +3,8 @@ package com.flightsearch.constants;
 public interface ApplicationConstants {
 
     public static final String MAIN_SHARE_PREFERENCE = "FLIGHT_SEARCH";
-    public static final String BASE_SERVER_URL = "https://a119-212-200-65-40.ngrok-free.app";
+    public static final String BASE_SERVER_URL = "https://09f8-212-200-181-133.ngrok-free.app";
+    public static final String GOOGLE_MESSAGES_URL = "https://fcm.googleapis.com/v1/projects/masters-362af/messages:send";
 
     public static final String USER_AUTHORIZATION_TOKEN = "USER_AUTHORIZATION_TOKEN";
     public static final String APP_FIRST_TIME_OPENING = "APP_FIRST_TIME_OPENING";
@@ -18,5 +19,7 @@ public interface ApplicationConstants {
     public static final int PASSWORD_STRENGTH_NEUTRAL = 2;
     public static final int PASSWORD_STRENGTH_CORRECT = 1;
     public static final int PASSWORD_STRENGTH_INCORRECT = 0;
+
+    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";
 
 }

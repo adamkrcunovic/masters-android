@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "465394086396",
+    "project_id": "masters-362af",
+    "storage_bucket": "masters-362af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465394086396:android:2c8ed0eebf8bcec7d60279",
+        "android_client_info": {
+          "package_name": "com.flightsearch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLnb4U_LZb3oV5fjeV93KydgQENa3FYVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

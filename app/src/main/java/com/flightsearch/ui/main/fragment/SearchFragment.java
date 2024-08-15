@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.flightsearch.R;
@@ -75,6 +76,20 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setOnClickListeners();
         setOnFocusChangeListeners();
+        setCheckboxStatusChange();
+    }
+
+    private void setCheckboxStatusChange() {
+        binding.checkBoxFlyNightBefore.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    if (binding.constraintLayoutDatesInMonth.getVisibility() == View.VISIBLE) {
+                        if (binding.radioButtonOneWayFlight.isChecked()) binding.radioGroupMonth.clearCheck();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -169,6 +184,7 @@ public class SearchFragment extends Fragment {
             binding.constraintLayoutMulticity.setVisibility(View.GONE);
             binding.textViewAddMulticity.setVisibility(View.VISIBLE);
             binding.textViewTrip1.setText("Trip:");
+            binding.checkBoxFlyNightBefore.setChecked(false);
             setFlyNightBeforeVisibility(true);
         });
         binding.materialButtonSearch.setOnClickListener(v -> {

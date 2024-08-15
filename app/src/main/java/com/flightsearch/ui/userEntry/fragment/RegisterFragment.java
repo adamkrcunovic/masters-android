@@ -1,5 +1,6 @@
 package com.flightsearch.ui.userEntry.fragment;
 
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -24,6 +25,7 @@ import com.flightsearch.constants.ApplicationConstants;
 import com.flightsearch.databinding.FragmentRegisterBinding;
 import com.flightsearch.ui.userEntry.activity.UserEntryActivity;
 import com.flightsearch.utils.base.bottomSheet.BottomSheetChooseRadio;
+import com.flightsearch.utils.firebase.MyFirebaseMessagingService;
 import com.flightsearch.utils.helpers.HelperMethods;
 import com.flightsearch.utils.helpers.PasswordStrengthCalculatorHelper;
 import com.flightsearch.utils.models.in.InRegisterDTO;
@@ -48,6 +50,9 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
     @Inject
     MainApplication application;
 
+    @Inject
+    SharedPreferences sharedPreferences;
+
     private InRegisterDTO inRegisterDTO;
 
     private FragmentRegisterBinding binding;
@@ -71,16 +76,11 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        callCountries();
         setPasswordHelper();
         setTextWatcher();
         setOnFocusChangeListeners();
         setOnClickListeners();
         setPasswordStrengthColorsListener();
-    }
-
-    private void callCountries() {
-        application.getAllCountriesApiCall();
     }
 
     private void setPasswordHelper() {
@@ -246,7 +246,7 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
                 && binding.textInputLayoutCountry.getError() == null;
     }
 
-    BottomSheetChooseRadio bottomSheetChooseRadio;
+    private BottomSheetChooseRadio bottomSheetChooseRadio;
     private void setOnClickListeners() {
         binding.textInputEditTextCountry.setOnClickListener(v -> {
             setCountryErrors();
@@ -285,8 +285,8 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
         inRegisterDTO.setPassword(binding.textInputEditTextPassword.getText().toString());
         // DEVICE, COUNTRY, PREFERENCE!!!
         inRegisterDTO.setCountryId(1);
-        inRegisterDTO.setDeviceId("IDD");
-        inRegisterDTO.setPreferences("IDD;");
+        inRegisterDTO.setDeviceId(MyFirebaseMessagingService.getDeviceId(sharedPreferences));
+        inRegisterDTO.setPreferences(binding.textInputEditTextPreferences.getText().toString());
     }
 
     private void registerAccountRequest() {

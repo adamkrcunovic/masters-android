@@ -4,6 +4,7 @@ plugins {
     id "kotlin-kapt"
     id "dagger.hilt.android.plugin"
     id "androidx.navigation.safeargs"
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -33,6 +34,9 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    packagingOptions {
+        exclude "META-INF/DEPENDENCIES"
     }
 }
 
@@ -85,16 +89,16 @@ dependencies {
     // endregion
 
     // region Firebase
-    /*implementation platform('com.google.firebase:firebase-bom:33.1.2')
-    implementation 'com.google.firebase:firebase-crashlytics'
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging'
-    implementation 'com.google.firebase:firebase-dynamic-links'*/
+    implementation platform("com.google.firebase:firebase-bom:33.1.2")
+    implementation "com.google.firebase:firebase-messaging"
+    implementation "com.google.auth:google-auth-library-oauth2-http:1.10.0"
     // endregion
 
     // region fragment navigation
     implementation "androidx.navigation:navigation-fragment-ktx:2.7.7"
     implementation "androidx.navigation:navigation-ui-ktx:2.7.7"
     // endregion
+
+    implementation "com.android.volley:volley:1.2.1"
 
 }

@@ -20,6 +20,7 @@ import com.flightsearch.application.MainApplication;
 import com.flightsearch.databinding.FragmentSearchFriendsBinding;
 import com.flightsearch.ui.main.activity.MainActivity;
 import com.flightsearch.ui.main.adapter.RVAdapterFriendSearchItem;
+import com.flightsearch.utils.base.BaseFragment;
 import com.flightsearch.utils.helpers.HelperMethods;
 import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
@@ -35,7 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @AndroidEntryPoint
-public class SearchFriendsFragment extends Fragment {
+public class SearchFriendsFragment extends BaseFragment {
 
     @Inject
     FlightSearchServicesApi api;
@@ -173,8 +174,9 @@ public class SearchFriendsFragment extends Fragment {
         binding.constraintLayoutNoneFound.setVisibility(View.VISIBLE);
     }
 
-    void setAdapter(List<OutUserDTO> foundUsers) {
+    @Override
+    public void setAdapter(List<OutUserDTO> foundUsers) {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.VERTICAL, false));
-        binding.recyclerView.setAdapter(new RVAdapterFriendSearchItem(foundUsers, application.getCurrentUser()));
+        binding.recyclerView.setAdapter(new RVAdapterFriendSearchItem(foundUsers, application.getCurrentUser(), activity, api, this));
     }
 }

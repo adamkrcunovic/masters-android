@@ -7,6 +7,7 @@
     <string name="sign_up_hint_email">Email*</string>
     <string name="sign_up_hint_birthday">Birthday*</string>
     <string name="sign_up_hint_country">Country*</string>
+    <string name="sign_up_hint_preferences">Travel preferences</string>
     <string name="sign_up_hint_password">Password*</string>
     <string name="sign_up_hint_password_confirm">Password Confirm*</string>
     <string name="password_requirements">Create a password with these requirements</string>

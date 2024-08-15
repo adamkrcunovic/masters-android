@@ -1,5 +1,6 @@
 package com.flightsearch.utils.network.service;
 
+import com.flightsearch.utils.models.in.InEditProfileDTO;
 import com.flightsearch.utils.models.in.InFlightSearchDTO;
 import com.flightsearch.utils.models.in.InLoginDTO;
 import com.flightsearch.utils.models.in.InRegisterDTO;
@@ -21,6 +22,7 @@ import retrofit2.http.Query;
 
 public interface FlightSearchServicesApi {
 
+    //region account
     @POST("api/account/register")
     Call<String> register(@Body InRegisterDTO inRegisterDTO);
 
@@ -33,6 +35,11 @@ public interface FlightSearchServicesApi {
     @GET("api/account/getUserData")
     Call<OutUserDTO> getUserData();
 
+    @PUT("api/account/editPersonalData")
+    Call<Void> editProfile(@Body InEditProfileDTO inEditProfileDTO);
+    //endregion
+
+    //region flight tickets
     @GET("api/country")
     Call<List<OutCountryDTO>> getCountries();
 
@@ -41,8 +48,16 @@ public interface FlightSearchServicesApi {
 
     @PATCH("api/flights/search")
     Call<OutFlightDTO> getFlightDeals(@Body InFlightSearchDTO inFlightSearchDTO);
+    //endregion
 
+    //region friendship
     @GET("api/friend/search/{searchTerm}")
     Call<List<OutUserDTO>> searchUsers(@Path("searchTerm") String searchTerm);
 
+    @POST("api/friend/sendRequest/{friendId}")
+    Call<List<String>> sendFriendRequest(@Path("friendId") String friendId);
+
+    @PUT("api/friend/updateRequest/{friendId}/{acceptAndRejectRequest}")
+    Call<List<String>> acceptOrRejectFriendRequest(@Path("friendId") String friendId, @Path("acceptAndRejectRequest") boolean acceptAndRejectRequest);
+    //endregion
 }

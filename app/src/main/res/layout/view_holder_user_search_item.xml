@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         android:paddingVertical="16dp"
-        android:paddingHorizontal="32dp">
+        android:paddingHorizontal="32dp"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/textView_name"
@@ -89,7 +90,6 @@
             tools:text="Friends"
             android:fontFamily="@font/roboto_bold"
             android:textColor="@color/app_blue"
-            android:visibility="gone"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

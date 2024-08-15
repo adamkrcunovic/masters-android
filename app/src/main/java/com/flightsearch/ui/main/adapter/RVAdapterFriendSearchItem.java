@@ -6,21 +6,43 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.flightsearch.application.MainApplication;
+import com.flightsearch.databinding.FragmentSearchFriendsBinding;
 import com.flightsearch.databinding.ViewHolderUserSearchItemBinding;
+import com.flightsearch.ui.main.activity.MainActivity;
+import com.flightsearch.ui.main.fragment.FriendRequestsFragment;
+import com.flightsearch.ui.main.fragment.SearchFriendsFragment;
+import com.flightsearch.utils.base.BaseFragment;
 import com.flightsearch.utils.base.MyRecyclerViewHolder;
+import com.flightsearch.utils.firebase.BearerTokenGoogle;
 import com.flightsearch.utils.helpers.HelperMethods;
 import com.flightsearch.utils.models.out.OutUserDTO;
+import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 
 import java.util.List;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RVAdapterFriendSearchItem extends RecyclerView.Adapter<MyRecyclerViewHolder<OutUserDTO>> {
 
     private List<OutUserDTO> users;
     private OutUserDTO currentlyLoggedUser;
+    private MainActivity activity;
+    private FlightSearchServicesApi api;
+    private BaseFragment fragment;
 
-    public RVAdapterFriendSearchItem(List<OutUserDTO> users, OutUserDTO currentlyLoggedUser) {
+    public RVAdapterFriendSearchItem(List<OutUserDTO> users, OutUserDTO currentlyLoggedUser, MainActivity activity, FlightSearchServicesApi api, BaseFragment fragment) {
         this.users = users;
         this.currentlyLoggedUser = currentlyLoggedUser;
+        this.activity = activity;
+        this.api = api;
+        this.fragment = fragment;
     }
 
     @NonNull
@@ -83,7 +105,6 @@ public class RVAdapterFriendSearchItem extends RecyclerView.Adapter<MyRecyclerVi
             }
 
             if (isMe || pending != null || friend != null) {
-                binding.textViewStatus.setVisibility(View.VISIBLE);
                 if (isMe) binding.textViewStatus.setText("Myself");
                 if (pending != null) binding.textViewStatus.setText("Pending");
                 if (friend != null) binding.textViewStatus.setText("Friends");
@@ -92,6 +113,74 @@ public class RVAdapterFriendSearchItem extends RecyclerView.Adapter<MyRecyclerVi
                 binding.materialButtonPositive.setText(request != null ? "Accept" : "Add Friend");
                 if (request != null) binding.materialButtonNegative.setVisibility(View.VISIBLE);
             }
+
+            binding.materialButtonPositive.setOnClickListener(v -> {
+                if (binding.materialButtonPositive.getText().toString().equals("Accept")) {
+                    acceptFriendRequest(item, true);
+                } else {
+                    sendFriendRequest(item);
+                }
+            });
+
+            binding.materialButtonNegative.setOnClickListener(v -> {
+                acceptFriendRequest(item, false);
+            });
+        }
+
+        private void acceptFriendRequest(OutUserDTO friend, boolean acceptOrReject) {
+            activity.showDialog();
+            api.acceptOrRejectFriendRequest(friend.getId(), acceptOrReject).enqueue(new Callback<List<String>>() {
+                @Override
+                public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                    activity.dismissDialog();
+                    if (response.isSuccessful()) {
+                        OutUserDTO foundUserFromList = null;
+                        for (OutUserDTO user: currentlyLoggedUser.getRequests()
+                             ) {
+                            if (user.getId().equals(friend.getId())) foundUserFromList = user;
+                        }
+                        currentlyLoggedUser.getRequests().remove(foundUserFromList);
+                        /*binding.materialButtonPositive.setVisibility(View.GONE);
+                        binding.materialButtonNegative.setVisibility(View.GONE);*/
+                        if (acceptOrReject) {
+                            currentlyLoggedUser.getFriends().add(foundUserFromList);
+                            //binding.textViewStatus.setText("Friend");
+                            BearerTokenGoogle.sendNotifications(response.body(), "New friend", currentlyLoggedUser.getName() + " " + currentlyLoggedUser.getLastName() + " has accepted your friend request");
+                        }
+                        fragment.setAdapter(users);
+                        ((FriendRequestsFragment)fragment).setLayout();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<String>> call, Throwable throwable) {
+                    activity.dismissDialog();
+                }
+            });
+        }
+
+        private void sendFriendRequest(OutUserDTO friend) {
+            activity.showDialog();
+            api.sendFriendRequest(friend.getId()).enqueue(new Callback<List<String>>() {
+                @Override
+                public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                    activity.dismissDialog();
+                    if (response.isSuccessful()) {
+                        currentlyLoggedUser.getPending().add(friend);
+                        /*binding.materialButtonPositive.setVisibility(View.GONE);
+                        binding.materialButtonNegative.setVisibility(View.GONE);
+                        binding.textViewStatus.setText("Pending");*/
+                        fragment.setAdapter(users);
+                        BearerTokenGoogle.sendNotifications(response.body(), "New friend request", currentlyLoggedUser.getName() + " " + currentlyLoggedUser.getLastName() + " has sent you a friend request");
+                        if (fragment instanceof FriendRequestsFragment) ((FriendRequestsFragment)fragment).setLayout();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<String>> call, Throwable throwable) {
+                    activity.dismissDialog();
+                }
+            });
         }
     }
 

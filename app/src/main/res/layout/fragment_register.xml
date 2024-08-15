@@ -16,7 +16,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="32dp">
+            android:paddingHorizontal="32dp"
+            android:paddingBottom="32dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout_first_name"
@@ -100,109 +101,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout_rating1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/textInputLayout_birthday"
-                android:paddingHorizontal="5dp"
-                android:paddingVertical="10dp">
-
-                <TextView
-                    android:id="@+id/textView_rating1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Adventurous:"
-                    android:fontFamily="@font/roboto_regular"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/rating1"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <RatingBar
-                    android:id="@+id/rating1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:numStars="5"
-                    android:stepSize="0.1"
-                    android:isIndicator="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/textView_rating1"
-                    app:layout_constraintTop_toTopOf="@id/textView_rating1"
-                    app:layout_constraintBottom_toBottomOf="@id/textView_rating1"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout_rating2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/constraintLayout_rating1"
-                android:paddingHorizontal="5dp"
-                android:paddingVertical="10dp">
-
-                <TextView
-                    android:id="@+id/textView_rating2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Luxury and pleasure:"
-                    android:fontFamily="@font/roboto_regular"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/rating2"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <RatingBar
-                    android:id="@+id/rating2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:numStars="5"
-                    android:stepSize="0.1"
-                    android:isIndicator="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/textView_rating2"
-                    app:layout_constraintTop_toTopOf="@id/textView_rating2"
-                    app:layout_constraintBottom_toBottomOf="@id/textView_rating2"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout_rating3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/constraintLayout_rating2"
-                android:paddingHorizontal="5dp"
-                android:paddingVertical="10dp">
-
-                <TextView
-                    android:id="@+id/textView_rating3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Culture and History:"
-                    android:fontFamily="@font/roboto_regular"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/rating3"
-                    app:layout_constraintTop_toTopOf="parent"/>
-
-                <RatingBar
-                    android:id="@+id/rating3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:numStars="5"
-                    android:stepSize="0.1"
-                    android:isIndicator="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/textView_rating3"
-                    app:layout_constraintTop_toTopOf="@id/textView_rating3"
-                    app:layout_constraintBottom_toBottomOf="@id/textView_rating3"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout_country"
                 android:layout_width="match_parent"
@@ -210,7 +108,7 @@
                 android:clickable="true"
                 android:focusable="false"
                 app:errorEnabled="true"
-                app:layout_constraintTop_toBottomOf="@id/constraintLayout_rating3">
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout_birthday">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/textInputEditText_country"
@@ -228,12 +126,41 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/textView_preferences"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout_country"
+                android:text="Before we move on with setting password, can you please provide some short text about your trips lifestyle in order to make you better travel plans.The following things may help:\nAdventourosity or more into relax.\nCultural and historical sites or more into nature.\nVibrant nightlife or more into classy dinner."
+                android:layout_marginHorizontal="5dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout_preferences"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toBottomOf="@id/textView_preferences"
+                android:layout_marginTop="8dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputEditText_preferences"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_light"
+                    android:hint="@string/sign_up_hint_preferences"
+                    android:inputType="textPersonName|textCapSentences|textMultiLine">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:errorEnabled="true"
-                app:layout_constraintTop_toBottomOf="@id/textInputLayout_country"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayout_preferences"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -380,10 +307,8 @@
                 style="@style/Theme.FlightSearch.Button.Filled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginTop="32dp"
                 android:text="Register"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linearLayout_requirements" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

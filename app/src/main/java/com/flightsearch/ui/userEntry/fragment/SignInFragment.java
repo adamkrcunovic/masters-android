@@ -1,5 +1,6 @@
 package com.flightsearch.ui.userEntry.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.flightsearch.application.MainApplication;
 import com.flightsearch.databinding.FragmentSignInBinding;
 import com.flightsearch.ui.userEntry.activity.UserEntryActivity;
 import com.flightsearch.utils.base.BaseActivity;
+import com.flightsearch.utils.firebase.MyFirebaseMessagingService;
 import com.flightsearch.utils.helpers.HelperMethods;
 import com.flightsearch.utils.models.in.InLoginDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
@@ -35,6 +37,9 @@ public class SignInFragment extends Fragment {
 
     @Inject
     MainApplication application;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     private FragmentSignInBinding binding;
     private UserEntryActivity activity;
@@ -95,7 +100,7 @@ public class SignInFragment extends Fragment {
 
     private void callSignIn() {
         activity.showDialog();
-        api.signIn(new InLoginDTO(binding.textInputEditTextEmail.getText().toString(), binding.textInputEditTextPassword.getText().toString(), "device")).enqueue(new Callback<String>() {
+        api.signIn(new InLoginDTO(binding.textInputEditTextEmail.getText().toString(), binding.textInputEditTextPassword.getText().toString(), MyFirebaseMessagingService.getDeviceId(sharedPreferences))).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 activity.dismissDialog();

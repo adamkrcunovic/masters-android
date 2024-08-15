@@ -92,4 +92,8 @@ public class MainApplication extends Application implements ApplicationConstants
     public OutUserDTO getCurrentUser() {
         return currentUser;
     }
+
+    public void setCurrentUser(OutUserDTO currentUser) {
+        this.currentUser = currentUser;
+    }
 }

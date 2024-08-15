@@ -19,6 +19,10 @@ public class OutUserDTO {
     @Expose
     private String lastName;
 
+    @SerializedName("email")
+    @Expose
+    private String email;
+
     @SerializedName("country")
     @Expose
     private String country;
@@ -65,6 +69,14 @@ public class OutUserDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getCountry() {

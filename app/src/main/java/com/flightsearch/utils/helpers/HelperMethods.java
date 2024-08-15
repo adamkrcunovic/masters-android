@@ -48,6 +48,22 @@ public class HelperMethods {
     }
 
     @SuppressLint("SimpleDateFormat")
+    public static String BackendStringToDateString(String date) {
+        if (TextUtils.isEmpty(date)) {
+            return null;
+        }
+        SimpleDateFormat existingUTCFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat requiredFormat = new SimpleDateFormat("MM/dd/yyyy");
+        Date getDate = null;
+        try {
+            getDate = existingUTCFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return requiredFormat.format(getDate);
+    }
+
+    @SuppressLint("SimpleDateFormat")
     public static String dateStringToTime(String date) {
         if (TextUtils.isEmpty(date)) {
             return null;

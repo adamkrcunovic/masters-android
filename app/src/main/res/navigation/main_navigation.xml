@@ -27,6 +27,12 @@
         <action
             android:id="@+id/action_profileFragment_to_searchFriendsFragment"
             app:destination="@id/searchFriendsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_friendRequestsFragment"
+            app:destination="@id/friendRequestsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/flightSearchResultFragment"
@@ -41,5 +47,13 @@
         android:id="@+id/searchFriendsFragment"
         android:name="com.flightsearch.ui.main.fragment.SearchFriendsFragment"
         android:label="SearchFriendsFragment" />
+    <fragment
+        android:id="@+id/friendRequestsFragment"
+        android:name="com.flightsearch.ui.main.fragment.FriendRequestsFragment"
+        android:label="FriendRequestsFragment" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.flightsearch.ui.main.fragment.EditProfileFragment"
+        android:label="EditProfileFragment" />
 
 </navigation>
