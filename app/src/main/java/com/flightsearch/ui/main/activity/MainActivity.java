@@ -13,6 +13,10 @@ import com.flightsearch.R;
 import com.flightsearch.application.MainApplication;
 import com.flightsearch.databinding.ActivityMainBinding;
 import com.flightsearch.utils.base.BaseActivity;
+import com.flightsearch.utils.models.out.OutUserDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -80,4 +84,6 @@ public class MainActivity extends BaseActivity {
             navController = Navigation.findNavController(this, R.id.fragment);
         return navController;
     }
+
+    public List<OutUserDTO> usersToAddToItinerary = new ArrayList<>();
 }

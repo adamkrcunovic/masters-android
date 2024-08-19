@@ -22,6 +22,8 @@ import com.flightsearch.ui.main.activity.MainActivity;
 import com.flightsearch.ui.main.adapter.RVAdapterFriendSearchItem;
 import com.flightsearch.utils.base.BaseFragment;
 import com.flightsearch.utils.helpers.HelperMethods;
+import com.flightsearch.utils.models.out.OutFlightDealDTO;
+import com.flightsearch.utils.models.out.OutTripDTO;
 import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 
@@ -49,6 +51,9 @@ public class SearchFriendsFragment extends BaseFragment {
     private final Handler handlerQueryTextChange = new Handler();
     private Runnable runnableQueryTextChange;
     private MainActivity activity;
+    private boolean fromTripFragment;
+    private List<String> invitedMembers;
+    private int itineraryId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +68,13 @@ public class SearchFriendsFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initActivity();
+        getTrip();
+    }
+
+    private void getTrip() {
+        fromTripFragment = SearchFriendsFragmentArgs.fromBundle(getArguments()).getFromTripFragment();
+        invitedMembers = (List<String>)SearchFriendsFragmentArgs.fromBundle(getArguments()).getInvitedMembers();
+        itineraryId = SearchFriendsFragmentArgs.fromBundle(getArguments()).getItineraryId();
     }
 
     private void initActivity() {
@@ -172,6 +184,18 @@ public class SearchFriendsFragment extends BaseFragment {
         binding.progressLoader.setVisibility(View.GONE);
         binding.recyclerView.setVisibility(View.GONE);
         binding.constraintLayoutNoneFound.setVisibility(View.VISIBLE);
+    }
+
+    public boolean isFromTripFragment() {
+        return fromTripFragment;
+    }
+
+    public List<String> getInvitedMembers() {
+        return invitedMembers;
+    }
+
+    public int getItineraryId() {
+        return itineraryId;
     }
 
     @Override

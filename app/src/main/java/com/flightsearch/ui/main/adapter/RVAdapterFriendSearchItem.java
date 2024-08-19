@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.flightsearch.application.MainApplication;
-import com.flightsearch.databinding.FragmentSearchFriendsBinding;
 import com.flightsearch.databinding.ViewHolderUserSearchItemBinding;
 import com.flightsearch.ui.main.activity.MainActivity;
 import com.flightsearch.ui.main.fragment.FriendRequestsFragment;
@@ -21,10 +19,6 @@ import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 
 import java.util.List;
-
-import javax.inject.Inject;
-
-import dagger.hilt.android.AndroidEntryPoint;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -104,10 +98,19 @@ public class RVAdapterFriendSearchItem extends RecyclerView.Adapter<MyRecyclerVi
                 }
             }
 
-            if (isMe || pending != null || friend != null) {
+            if (isMe || pending != null || (friend != null)) {
                 if (isMe) binding.textViewStatus.setText("Myself");
                 if (pending != null) binding.textViewStatus.setText("Pending");
-                if (friend != null) binding.textViewStatus.setText("Friends");
+                if (friend != null) {
+                    if (fragment instanceof SearchFriendsFragment && ((SearchFriendsFragment) fragment).isFromTripFragment()) {
+                        if (((SearchFriendsFragment) fragment).getInvitedMembers().contains(friend.getId())) {
+                            binding.textViewStatus.setText("Member");
+                        } else {
+                            binding.materialButtonPositive.setVisibility(View.VISIBLE);
+                            binding.materialButtonPositive.setText("Invite");
+                        }
+                    } else binding.textViewStatus.setText("Friends");
+                }
             } else {
                 binding.materialButtonPositive.setVisibility(View.VISIBLE);
                 binding.materialButtonPositive.setText(request != null ? "Accept" : "Add Friend");
@@ -115,10 +118,14 @@ public class RVAdapterFriendSearchItem extends RecyclerView.Adapter<MyRecyclerVi
             }
 
             binding.materialButtonPositive.setOnClickListener(v -> {
-                if (binding.materialButtonPositive.getText().toString().equals("Accept")) {
-                    acceptFriendRequest(item, true);
+                if (binding.materialButtonPositive.getText().toString().equals("Invite")) {
+                    sendItineraryRequest(item);
                 } else {
-                    sendFriendRequest(item);
+                    if (binding.materialButtonPositive.getText().toString().equals("Accept")) {
+                        acceptFriendRequest(item, true);
+                    } else {
+                        sendFriendRequest(item);
+                    }
                 }
             });
 
@@ -173,6 +180,27 @@ public class RVAdapterFriendSearchItem extends RecyclerView.Adapter<MyRecyclerVi
                         fragment.setAdapter(users);
                         BearerTokenGoogle.sendNotifications(response.body(), "New friend request", currentlyLoggedUser.getName() + " " + currentlyLoggedUser.getLastName() + " has sent you a friend request");
                         if (fragment instanceof FriendRequestsFragment) ((FriendRequestsFragment)fragment).setLayout();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<String>> call, Throwable throwable) {
+                    activity.dismissDialog();
+                }
+            });
+        }
+
+        private void sendItineraryRequest(OutUserDTO user) {
+            activity.showDialog();
+            api.inviteUserToTrip(((SearchFriendsFragment) fragment).getItineraryId(), user.getId()).enqueue(new Callback<List<String>>() {
+                @Override
+                public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                    activity.dismissDialog();
+                    if (response.isSuccessful()) {
+                        ((SearchFriendsFragment) fragment).getInvitedMembers().add(user.getId());
+                        BearerTokenGoogle.sendNotifications(response.body(), "Trip Alert", currentlyLoggedUser.getName() + " " + currentlyLoggedUser.getLastName() + " has invited you for a trip");
+                        activity.usersToAddToItinerary.add(user);
+                        notifyDataSetChanged();
                     }
                 }
 

@@ -16,6 +16,7 @@ import com.flightsearch.utils.models.out.OutFlightSegmentDTO;
 import com.flightsearch.utils.models.out.OutTripDTO;
 import com.flightsearch.utils.models.out.OutUserDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RVAdapterTripShort extends RecyclerView.Adapter<MyRecyclerViewHolder<OutTripDTO>>{
@@ -68,8 +69,8 @@ public class RVAdapterTripShort extends RecyclerView.Adapter<MyRecyclerViewHolde
 
             OutFlightSegmentDTO firstTo = item.getToSegments().get(0);
             OutFlightSegmentDTO lastTo = item.getToSegments().get(item.getToSegments().size() - 1);
-            OutFlightSegmentDTO firstFrom = item.getFromSegments().get(0);
-            OutFlightSegmentDTO lastFrom = item.getFromSegments().get(item.getFromSegments().size() - 1);
+            OutFlightSegmentDTO firstFrom = hasFromFlight ? item.getFromSegments().get(0) : new OutFlightSegmentDTO();
+            OutFlightSegmentDTO lastFrom = hasFromFlight ? item.getFromSegments().get(item.getFromSegments().size() - 1) : new OutFlightSegmentDTO();
 
             binding.textViewTitle.setText(item.getItineraryName());
             binding.textViewToTime.setText(HelperMethods.dateStringToDateWithName(firstTo.getDeparture()));

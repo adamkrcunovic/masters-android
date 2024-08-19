@@ -66,8 +66,11 @@ public interface FlightSearchServicesApi {
     @GET("api/trip/getTrips")
     Call<List<OutTripDTO>> getTrips();
 
+    @POST("api/trip/inviteUserToTrip/{itineraryId}/{user}")
+    Call<List<String>> inviteUserToTrip(@Path("itineraryId") int itineraryId, @Path("user") String user);
+
     //subregion comments
     @POST("api/trip/addComment/{itineraryId}/{comment}")
-    Call<List<String>> AddComment(@Path("itineraryId") int itineraryId, @Path("comment") String comment);
+    Call<List<String>> addComment(@Path("itineraryId") int itineraryId, @Path("comment") String comment);
     //endregion
 }

@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.flightsearch.ui.main.adapter.RVAdapterComment;
 import com.flightsearch.ui.main.adapter.RVAdapterFlightDealItinerary;
 import com.flightsearch.utils.firebase.BearerTokenGoogle;
 import com.flightsearch.utils.helpers.HelperMethods;
+import com.flightsearch.utils.models.out.OutCommentDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
 import com.flightsearch.utils.models.out.OutFlightDealDTO;
 import com.flightsearch.utils.models.out.OutFlightSegmentDTO;
@@ -26,6 +28,9 @@ import com.flightsearch.utils.models.out.OutTripDTO;
 import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -60,10 +65,22 @@ public class TripFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (flightTrip != null && activity.usersToAddToItinerary.size() > 0) {
+            flightTrip.getInvitedMembers().addAll(activity.usersToAddToItinerary);
+            activity.usersToAddToItinerary = new ArrayList<>();
+            setLayout();
+        }
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getTrip();
         setLayout();
+        setOnClickListeners();
+        setOnFocusChangeListeners();
     }
 
     private void getTrip() {
@@ -92,8 +109,8 @@ public class TripFragment extends Fragment {
             else binding.textViewMembers.setText("There are no members");
             binding.materialButtonAddMember.setVisibility(amICreator ? View.VISIBLE : View.GONE);
 
+            binding.textViewComments.setVisibility(View.VISIBLE);
             if (flightTrip.getComments() != null && !flightTrip.getComments().isEmpty()) {
-                binding.textViewComments.setVisibility(View.VISIBLE);
                 binding.recyclerViewComments.setVisibility(View.VISIBLE);
                 binding.recyclerViewComments.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
                 binding.recyclerViewComments.setAdapter(new RVAdapterComment(flightTrip.getComments()));
@@ -103,27 +120,6 @@ public class TripFragment extends Fragment {
             binding.view2.setVisibility(View.VISIBLE);
             binding.constraintLayoutComment.setVisibility(View.VISIBLE);
             binding.textViewCommenterName.setText(application.getCurrentUser().getName() + " " + application.getCurrentUser().getLastName());
-
-            binding.materialButtonPost.setOnClickListener(v -> {
-                String postText = binding.textInputEditTextComment.getText().toString();
-                if (!postText.isEmpty()) {
-                    activity.showDialog();
-                    api.AddComment(flightTrip.getId(), postText).enqueue(new Callback<List<String>>() {
-                        @Override
-                        public void onResponse(Call<List<String>> call, Response<List<String>> response) {
-                            activity.dismissDialog();
-                            if (response.isSuccessful()) {
-                                BearerTokenGoogle.sendNotifications(response.body(), "New comment", application.getCurrentUser().getName() + " " + application.getCurrentUser().getLastName() + " has added comment on " + flightTrip.getItineraryName());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<String>> call, Throwable throwable) {
-                            activity.dismissDialog();
-                        }
-                    });
-                }
-            });
         }
 
         binding.materialToolbar.setTitle(isTrip ? flightTrip.getItineraryName() : "Flight Deal");
@@ -148,5 +144,55 @@ public class TripFragment extends Fragment {
             RVAdapterFlightDealItinerary adapter2 = new RVAdapterFlightDealItinerary(flightDeal.getFromSegments(), flightDeal.getLayoverFromDuration());
             binding.recyclerViewFlight2.setAdapter(adapter2);
         }
+    }
+
+    private void setOnClickListeners() {
+        binding.materialButtonPost.setOnClickListener(v -> {
+            HelperMethods.hideKeyboard(activity);
+            setCommentErrors();
+            if (binding.textInputLayoutComment.getError() == null) {
+                String postText = binding.textInputEditTextComment.getText().toString();
+                activity.showDialog();
+                api.addComment(flightTrip.getId(), postText).enqueue(new Callback<List<String>>() {
+                    @Override
+                    public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                        activity.dismissDialog();
+                        if (response.isSuccessful()) {
+                            BearerTokenGoogle.sendNotifications(response.body(), "New comment", application.getCurrentUser().getName() + " " + application.getCurrentUser().getLastName() + " has added comment on " + flightTrip.getItineraryName());
+                            flightTrip.getComments().add(new OutCommentDTO(postText, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(new Date()), application.getCurrentUser()));
+                            binding.recyclerViewComments.getAdapter().notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<String>> call, Throwable throwable) {
+                        activity.dismissDialog();
+                    }
+                });
+            }
+        });
+        binding.materialButtonAddMember.setOnClickListener(v -> {
+            ArrayList<String> members = new ArrayList<>();
+            members.add(flightTrip.getCreator().getId());
+            for (OutUserDTO member: flightTrip.getInvitedMembers()
+                 ) {
+                members.add(member.getId());
+            }
+            activity.getNavController().navigate(TripFragmentDirections.actionTripFragmentToSearchFriendsFragment().setFromTripFragment(true).setInvitedMembers(members).setItineraryId(flightTrip.getId()));
+        });
+    }
+
+    private void setOnFocusChangeListeners() {
+        binding.textInputEditTextComment.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                binding.textInputLayoutComment.setError(null);
+            } else {
+                setCommentErrors();
+            }
+        });
+    }
+
+    private void setCommentErrors() {
+        if (TextUtils.isEmpty(binding.textInputEditTextComment.getText())) binding.textInputLayoutComment.setError(activity.getString(R.string.error_field_required));
     }
 }

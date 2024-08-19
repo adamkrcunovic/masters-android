@@ -17,6 +17,12 @@ public class OutCommentDTO {
     @Expose
     private OutUserDTO user;
 
+    public OutCommentDTO(String commentText, String dateCreated, OutUserDTO user) {
+        this.commentText = commentText;
+        this.dateCreated = dateCreated;
+        this.user = user;
+    }
+
     public String getCommentText() {
         return commentText;
     }
