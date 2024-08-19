@@ -64,6 +64,22 @@ public class HelperMethods {
     }
 
     @SuppressLint("SimpleDateFormat")
+    public static String BackendExactTimeStringToDateStringForComment(String date) {
+        if (TextUtils.isEmpty(date)) {
+            return null;
+        }
+        SimpleDateFormat existingUTCFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat requiredFormat = new SimpleDateFormat("EEE dd MMM, HH:mm");
+        Date getDate = null;
+        try {
+            getDate = existingUTCFormat.parse(date.split(",")[0]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return requiredFormat.format(getDate);
+    }
+
+    @SuppressLint("SimpleDateFormat")
     public static String dateStringToTime(String date) {
         if (TextUtils.isEmpty(date)) {
             return null;

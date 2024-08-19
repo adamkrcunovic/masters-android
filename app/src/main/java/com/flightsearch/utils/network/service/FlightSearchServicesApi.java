@@ -7,6 +7,7 @@ import com.flightsearch.utils.models.in.InRegisterDTO;
 import com.flightsearch.utils.models.out.OutCountryDTO;
 import com.flightsearch.utils.models.out.OutDatePairsDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
+import com.flightsearch.utils.models.out.OutTripDTO;
 import com.flightsearch.utils.models.out.OutUserDTO;
 
 import java.util.List;
@@ -59,5 +60,14 @@ public interface FlightSearchServicesApi {
 
     @PUT("api/friend/updateRequest/{friendId}/{acceptAndRejectRequest}")
     Call<List<String>> acceptOrRejectFriendRequest(@Path("friendId") String friendId, @Path("acceptAndRejectRequest") boolean acceptAndRejectRequest);
+    //endregion
+
+    //region trip
+    @GET("api/trip/getTrips")
+    Call<List<OutTripDTO>> getTrips();
+
+    //subregion comments
+    @POST("api/trip/addComment/{itineraryId}/{comment}")
+    Call<List<String>> AddComment(@Path("itineraryId") int itineraryId, @Path("comment") String comment);
     //endregion
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,17 @@ import com.flightsearch.application.MainApplication;
 import com.flightsearch.constants.ApplicationConstants;
 import com.flightsearch.databinding.FragmentMyTripsBinding;
 import com.flightsearch.ui.main.activity.MainActivity;
+import com.flightsearch.ui.main.adapter.RVAdapterFlightDeal;
+import com.flightsearch.ui.main.adapter.RVAdapterFlightDealItinerary;
+import com.flightsearch.ui.main.adapter.RVAdapterTripShort;
 import com.flightsearch.ui.userEntry.activity.UserEntryActivity;
 import com.flightsearch.utils.base.BaseFragment;
+import com.flightsearch.utils.models.out.OutFlightDealDTO;
+import com.flightsearch.utils.models.out.OutFlightSegmentDTO;
+import com.flightsearch.utils.models.out.OutTripDTO;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -45,7 +54,6 @@ public class MyTripsFragment extends BaseFragment implements ApplicationConstant
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setTabBar();
         setOnclickListeners();
     }
 
@@ -59,25 +67,51 @@ public class MyTripsFragment extends BaseFragment implements ApplicationConstant
     }
 
     private void setTabBar() {
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("MY TRIPS"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("FRIENDS TRIPS"));
-        binding.tabLayout.setTabMode(TabLayout.MODE_FIXED);
-        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
+        if (application.getMyTrips() == null || (application.getMyTrips().get(0).isEmpty() && application.getMyTrips().get(1).isEmpty() && application.getMyTrips().get(2).isEmpty())) {
+            binding.tabLayout.setVisibility(View.GONE);
+            binding.recyclerView.setVisibility(View.GONE);
+        } else {
+            binding.tabLayout.setVisibility(View.VISIBLE);
+            binding.recyclerView.setVisibility(View.VISIBLE);
+            if (application.getMyTrips() != null && !application.getMyTrips().get(1).isEmpty()) {
+                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("CURRENT"));
+                setLayout(application.getMyTrips().get(1), false);
             }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
+            if (application.getMyTrips() != null && !application.getMyTrips().get(0).isEmpty()) {
+                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("PAST"));
+                setLayout(application.getMyTrips().get(0), false);
             }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
+            if (application.getMyTrips() != null && !application.getMyTrips().get(2).isEmpty()) {
+                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("UPCOMING"));
+                setLayout(application.getMyTrips().get(2), true);
             }
-        });
+            binding.tabLayout.setTabMode(TabLayout.MODE_FIXED);
+            binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    String tabText = tab.getText().toString();
+                    if (tabText.equals("CURRENT")) {
+                        activity.getNavController().navigate(MyTripsFragmentDirections.actionMyTripsFragmentToTripFragment(application.getMyTrips().get(1).get(0)));
+                    }
+                    if (tabText.equals("PAST")) {
+                        activity.getNavController().navigate(MyTripsFragmentDirections.actionMyTripsFragmentToTripFragment(application.getMyTrips().get(0).get(0)));
+                    }
+                    if (tabText.equals("UPCOMING")) {
+                        activity.getNavController().navigate(MyTripsFragmentDirections.actionMyTripsFragmentToTripFragment(application.getMyTrips().get(2).get(0)));
+                    }
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -86,8 +120,19 @@ public class MyTripsFragment extends BaseFragment implements ApplicationConstant
         setLoggedOrGuestView();
     }
 
+    private void setLayout(List<OutTripDTO> trips, boolean showPrice) {
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+        binding.recyclerView.setAdapter(new RVAdapterTripShort(trips, showPrice, new RVAdapterTripShort.OnFlightDealClickListener() {
+            @Override
+            public void onClick(OutTripDTO item) {
+                activity.getNavController().navigate(MyTripsFragmentDirections.actionMyTripsFragmentToTripFragment(item));
+            }
+        }));
+    }
+
     private void setLoggedOrGuestView() {
         binding.constraintLayoutGuest.setVisibility(application.isUserLogged() ? View.GONE : View.VISIBLE);
         binding.coordinatorLayoutLogged.setVisibility(application.isUserLogged() ? View.VISIBLE : View.GONE);
+        if (application.isUserLogged()) setTabBar();
     }
 }

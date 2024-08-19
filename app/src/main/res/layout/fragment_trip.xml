@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_grey">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/materialToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_back"
+            tools:title="Trip Data"
+            app:titleCentered="true"
+            app:navigationContentDescription="Go back"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="true"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="32dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_members"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/textView_creatorTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="32dp"
+                android:text="Creator:"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/app_text"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textView_creator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/textView_creatorTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="32dp"
+                tools:text="Adam Krcunovic"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textView_membersTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/textView_creator"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="Members:"
+                android:layout_marginStart="32dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/app_text"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textView_members"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/textView_membersTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Adam Krcunovic"
+                android:layout_marginStart="32dp"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/materialButton_addMember"
+                style="@style/Theme.FlightSearch.Button.Filled"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Add Members"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/textView_membersTitle"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintBottom_toBottomOf="@id/textView_members"
+                android:textSize="12sp"
+                android:visibility="gone"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView_flight1DepartureDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout_members"
+            tools:text="Departure - Tue 24 Sep"
+            android:fontFamily="@font/roboto_regular"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardViewFlight1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            app:cardCornerRadius="15dp"
+            app:layout_constraintTop_toBottomOf="@id/textView_flight1DepartureDate"
+            android:layout_marginTop="16dp"
+            app:strokeColor="@color/black"
+            app:strokeWidth="0.5dp"
+            android:layout_marginHorizontal="32dp">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_flight1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/view_holder_trip_itinerary_info"
+                    tools:itemCount="2"/>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/textView_flight1ArrivalDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/materialCardViewFlight1"
+            tools:text="Arrival - Tue 24 Sep"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/roboto_regular"
+            android:textColor="@color/black"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constrainLayout_generateTrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/textView_flight1ArrivalDate"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="32dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/materialButton_exactDatesActive"
+                style="@style/Theme.FlightSearch.Button.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Generate Trip Itinerary"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginHorizontal="64dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textView_signInRegisterText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="In order to save this trip please sign in or register!"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:paddingHorizontal="64dp"
+                android:visibility="gone"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/materialButton_register"
+                style="@style/Theme.FlightSearch.Button.Filled"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                app:layout_constraintTop_toBottomOf="@id/textView_signInRegisterText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/materialButton_sign_in"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/materialButton_sign_in"
+                style="@style/Theme.FlightSearch.Button.Outline.Oval.WhiteBackground"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Sign In"
+                app:layout_constraintTop_toBottomOf="@id/textView_signInRegisterText"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/materialButton_register"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_flight2"
+            app:layout_constraintTop_toBottomOf="@id/constrainLayout_generateTrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="32dp">
+
+            <TextView
+                android:id="@+id/textView_flight2DepartureDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Departure - Tue 24 Sep"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/black"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardViewFlight2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                app:cardCornerRadius="15dp"
+                app:layout_constraintTop_toBottomOf="@id/textView_flight2DepartureDate"
+                android:layout_marginTop="16dp"
+                app:strokeColor="@color/black"
+                app:strokeWidth="0.5dp">
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView_flight2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:listitem="@layout/view_holder_trip_itinerary_info"
+                        tools:itemCount="2"/>
+
+                </androidx.core.widget.NestedScrollView>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/textView_flight2ArrivalDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/materialCardViewFlight2"
+                tools:text="Arrival - Tue 24 Sep"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_regular"
+                android:textColor="@color/black"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constrainLayout_commentSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout_flight2"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:id="@+id/textView_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="Comments Section"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/black"
+                android:layout_marginStart="32dp"
+                android:textSize="15sp"
+                android:visibility="gone"
+                android:paddingBottom="4dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/textView_comments"
+                tools:itemCount="3"
+                tools:listitem="@layout/view_holder_comment"
+                android:visibility="gone"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/recyclerView_comments"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp"
+                android:paddingHorizontal="32dp"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textView_commenterName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Adam Krcunovic"
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/roboto_bold"
+                    android:drawableStart="@drawable/ic_account_comment"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true"
+                    app:layout_constraintTop_toBottomOf="@id/textView_commenterName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/materialButton_post"
+                    android:layout_marginEnd="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textInputEditText_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:hint="Your comment here"
+                        android:inputType="textPersonName|textCapSentences|textMultiLine">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/materialButton_post"
+                    style="@style/Theme.FlightSearch.Button.Filled"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Post"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/textInputLayout_comment"
+                    app:layout_constraintBottom_toBottomOf="@id/textInputLayout_comment"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="16dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/view1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/customize_separator_color"
+                app:layout_constraintTop_toTopOf="@id/constraintLayout_comment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone"/>
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/customize_separator_color"
+                app:layout_constraintTop_toBottomOf="@id/constraintLayout_comment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

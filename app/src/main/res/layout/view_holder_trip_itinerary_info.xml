@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toTopOf="parent"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintEnd_toEndOf="parent">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/constraintLayout_flight"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    android:padding="12dp">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/customize_separator_color"
+        app:layout_constraintTop_toBottomOf="@id/textView_flightCode"
+        app:layout_constraintStart_toEndOf="@id/textView_departureAirport"
+        app:layout_constraintEnd_toStartOf="@id/textView_arrivalAirport"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/textView_flightCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="AT - 15"
+        android:fontFamily="@font/roboto_light"
+        android:textColor="@color/app_text"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/textView_flightDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view"
+        tools:text="2Hours 15Minutes"
+        android:fontFamily="@font/roboto_light"
+        android:textColor="@color/app_text"
+        android:textSize="12sp"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/textView_departureAirport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view"
+        app:layout_constraintBottom_toBottomOf="@id/view"
+        tools:text="BEG"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/app_blue"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/textView_departureTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_departureAirport"
+        tools:text="20:40" />
+
+    <TextView
+        android:id="@+id/textView_arrivalAirport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view"
+        app:layout_constraintBottom_toBottomOf="@id/view"
+        tools:text="LTN"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/app_blue"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/textView_arrivalTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_arrivalAirport"
+        tools:text="22:25"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/black"
+        android:textSize="16sp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<View
+    android:id="@+id/view_separator1"
+    android:layout_width="0dp"
+    android:layout_height="1dp"
+    android:background="@color/customize_separator_color"
+    app:layout_constraintTop_toBottomOf="@id/constraintLayout_flight"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toStartOf="@id/textView_layoverDuration"
+    android:layout_marginTop="8dp"
+    android:visibility="gone"/>
+
+<TextView
+    android:id="@+id/textView_layoverDuration"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:text="LTN - Layover (5Days 3Hours 5Minutes)"
+    android:padding="8dp"
+    android:fontFamily="@font/roboto_bold"
+    android:textColor="@color/black"
+    android:textSize="14sp"
+    app:layout_constraintStart_toEndOf="@id/view_separator1"
+    app:layout_constraintEnd_toStartOf="@id/view_separator2"
+    app:layout_constraintTop_toTopOf="@id/view_separator1"
+    app:layout_constraintBottom_toBottomOf="@id/view_separator1"
+    android:visibility="gone"/>
+
+<View
+    android:id="@+id/view_separator2"
+    android:layout_width="0dp"
+    android:layout_height="1dp"
+    android:background="@color/customize_separator_color"
+    app:layout_constraintTop_toBottomOf="@id/constraintLayout_flight"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/textView_layoverDuration"
+    android:layout_marginTop="8dp"
+    android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

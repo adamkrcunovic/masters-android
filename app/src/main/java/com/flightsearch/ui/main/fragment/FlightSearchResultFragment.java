@@ -88,7 +88,7 @@ public class FlightSearchResultFragment extends Fragment {
         RVAdapterFlightDeal adapter = new RVAdapterFlightDeal(flightsToShowOnScreen, new RVAdapterFlightDeal.OnFlightDealClickListener() {
             @Override
             public void onClick(OutFlightDealDTO deal) {
-
+                activity.getNavController().navigate(FlightSearchResultFragmentDirections.actionFlightSearchResultFragmentToTripFragment(deal));
             }
         });
         binding.recyclerView.setAdapter(adapter);

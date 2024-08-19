@@ -18,7 +18,11 @@
         android:id="@+id/myTripsFragment"
         android:name="com.flightsearch.ui.main.fragment.MyTripsFragment"
         android:label="fragment_my_trips"
-        tools:layout="@layout/fragment_my_trips" />
+        tools:layout="@layout/fragment_my_trips" >
+        <action
+            android:id="@+id/action_myTripsFragment_to_tripFragment"
+            app:destination="@id/tripFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.flightsearch.ui.main.fragment.ProfileFragment"
@@ -42,6 +46,9 @@
         <argument
             android:name="searchFlightResult"
             app:argType="java.io.Serializable" />
+        <action
+            android:id="@+id/action_flightSearchResultFragment_to_tripFragment"
+            app:destination="@id/tripFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFriendsFragment"
@@ -55,5 +62,14 @@
         android:id="@+id/editProfileFragment"
         android:name="com.flightsearch.ui.main.fragment.EditProfileFragment"
         android:label="EditProfileFragment" />
+    <fragment
+        android:id="@+id/tripFragment"
+        android:name="com.flightsearch.ui.main.fragment.TripFragment"
+        android:label="fragment_trip"
+        tools:layout="@layout/fragment_trip" >
+        <argument
+            android:name="flightDeal"
+            app:argType="java.io.Serializable" />
+    </fragment>
 
 </navigation>

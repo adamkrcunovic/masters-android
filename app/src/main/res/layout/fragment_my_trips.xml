@@ -44,7 +44,7 @@
         android:id="@+id/coordinatorLayout_logged"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:background="@color/app_grey">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -79,7 +79,7 @@
             android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:itemCount="3"
-            android:paddingHorizontal="16dp"/>
+            android:paddingHorizontal="32dp"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
