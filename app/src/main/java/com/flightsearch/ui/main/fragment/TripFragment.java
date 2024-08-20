@@ -6,27 +6,38 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.flightsearch.R;
 import com.flightsearch.application.MainApplication;
 import com.flightsearch.databinding.FragmentTripBinding;
 import com.flightsearch.ui.main.activity.MainActivity;
+import com.flightsearch.ui.main.adapter.RVAdapterAttraction;
 import com.flightsearch.ui.main.adapter.RVAdapterComment;
 import com.flightsearch.ui.main.adapter.RVAdapterFlightDealItinerary;
 import com.flightsearch.utils.firebase.BearerTokenGoogle;
 import com.flightsearch.utils.helpers.HelperMethods;
+import com.flightsearch.utils.models.helper.PlanAttractionsDTO;
+import com.flightsearch.utils.models.helper.PlanDayDTO;
+import com.flightsearch.utils.models.in.InGenerateTripDTO;
 import com.flightsearch.utils.models.out.OutCommentDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
 import com.flightsearch.utils.models.out.OutFlightDealDTO;
 import com.flightsearch.utils.models.out.OutFlightSegmentDTO;
+import com.flightsearch.utils.models.out.OutGenerateTripDTO;
 import com.flightsearch.utils.models.out.OutTripDTO;
 import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
+import com.google.android.material.tabs.TabLayout;
+import com.google.api.client.json.Json;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,6 +63,7 @@ public class TripFragment extends Fragment {
     private FragmentTripBinding binding;
     private OutFlightDealDTO flightDeal;
     private OutTripDTO flightTrip;
+    private List<PlanDayDTO> dayPlans;
 
     private MainActivity activity;
 
@@ -81,6 +93,7 @@ public class TripFragment extends Fragment {
         setLayout();
         setOnClickListeners();
         setOnFocusChangeListeners();
+        setOnBackPressedListener();
     }
 
     private void getTrip() {
@@ -133,6 +146,16 @@ public class TripFragment extends Fragment {
 
         if (flightDeal.getFromSegments() != null && !flightDeal.getFromSegments().isEmpty()) {
 
+            if (isTrip) {
+                if (flightTrip.getChatGPTGeneratedText() == null || flightTrip.getChatGPTGeneratedText().length() == 0) {
+                    binding.materialButtonGenerateTrip.setVisibility(View.VISIBLE);
+                } else {
+                    dayPlans = HelperMethods.parseGeneratedText(flightTrip.getChatGPTGeneratedText());
+                    setGeneratedPlan();
+                }
+            }
+
+            binding.constraintLayoutFlight2.setVisibility(View.VISIBLE);
             binding.materialCardViewFlight2.setVisibility(View.VISIBLE);
             binding.textViewFlight2DepartureDate.setVisibility(View.VISIBLE);
             binding.textViewFlight2ArrivalDate.setVisibility(View.VISIBLE);
@@ -158,6 +181,7 @@ public class TripFragment extends Fragment {
                     public void onResponse(Call<List<String>> call, Response<List<String>> response) {
                         activity.dismissDialog();
                         if (response.isSuccessful()) {
+                            binding.textInputEditTextComment.setText("");
                             BearerTokenGoogle.sendNotifications(response.body(), "New comment", application.getCurrentUser().getName() + " " + application.getCurrentUser().getLastName() + " has added comment on " + flightTrip.getItineraryName());
                             flightTrip.getComments().add(new OutCommentDTO(postText, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(new Date()), application.getCurrentUser()));
                             binding.recyclerViewComments.getAdapter().notifyDataSetChanged();
@@ -180,6 +204,69 @@ public class TripFragment extends Fragment {
             }
             activity.getNavController().navigate(TripFragmentDirections.actionTripFragmentToSearchFriendsFragment().setFromTripFragment(true).setInvitedMembers(members).setItineraryId(flightTrip.getId()));
         });
+        binding.materialButtonGenerateTrip.setOnClickListener(v -> {
+            callGenerateTrip();
+        });
+    }
+
+    private void callGenerateTrip() {
+        activity.showDialog();
+        api.generateTrip(new InGenerateTripDTO(flightDeal)).enqueue(new Callback<OutGenerateTripDTO>() {
+            @Override
+            public void onResponse(Call<OutGenerateTripDTO> call, Response<OutGenerateTripDTO> response) {
+                activity.dismissDialog();
+                if (response.isSuccessful()) {
+                    List<PlanDayDTO> parsedGeneratedTripData = HelperMethods.parseGeneratedText(response.body().getGeneratedTrip());
+                    dayPlans = parsedGeneratedTripData;
+                    setGeneratedPlan();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OutGenerateTripDTO> call, Throwable throwable) {
+                activity.dismissDialog();
+            }
+        });
+    }
+
+    private void setGeneratedPlan() {
+        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int index = tab.getPosition();
+                setChatGPTText(index);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        for (PlanDayDTO dayPlan: dayPlans
+        ) {
+            binding.tabLayout.addTab(binding.tabLayout.newTab().setText(dayPlan.getDay()));
+            /*for (PlanAttractionsDTO attraction: dayPlan.getPlanAttractions()
+                 ) {
+                System.out.println("Attraction: " + attraction.getAttractionName());
+                System.out.println("AttractionLatitude: " + attraction.getAttractionLatitude());
+                System.out.println("AttractionLongitude: " + attraction.getAttractionLongitude());
+                System.out.println("AttractionPlan: " + attraction.getGetAttractionText());
+            }*/
+        }
+        setChatGPTText(0);
+        binding.materialButtonGenerateTrip.setVisibility(View.GONE);
+        binding.constraintLayoutGeneratedTrip.setVisibility(View.VISIBLE);
+    }
+
+    private void setChatGPTText(int i) {
+        binding.recyclerViewGeneratedPlan.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.VERTICAL, false));
+        binding.recyclerViewGeneratedPlan.setAdapter(new RVAdapterAttraction(dayPlans.get(i).getPlanAttractions()));
+        Glide.with(activity).load(HelperMethods.getGoogleImageUrlItinerary(dayPlans.get(i).getPlanAttractions())).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).into(binding.imageViewItinerary);
     }
 
     private void setOnFocusChangeListeners() {
@@ -194,5 +281,11 @@ public class TripFragment extends Fragment {
 
     private void setCommentErrors() {
         if (TextUtils.isEmpty(binding.textInputEditTextComment.getText())) binding.textInputLayoutComment.setError(activity.getString(R.string.error_field_required));
+    }
+
+    private void setOnBackPressedListener() {
+        binding.materialToolbar.setNavigationOnClickListener(v -> {
+            activity.onBackPressed();
+        });
     }
 }

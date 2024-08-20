@@ -2,11 +2,14 @@ package com.flightsearch.utils.network.service;
 
 import com.flightsearch.utils.models.in.InEditProfileDTO;
 import com.flightsearch.utils.models.in.InFlightSearchDTO;
+import com.flightsearch.utils.models.in.InGenerateTripDTO;
 import com.flightsearch.utils.models.in.InLoginDTO;
 import com.flightsearch.utils.models.in.InRegisterDTO;
 import com.flightsearch.utils.models.out.OutCountryDTO;
 import com.flightsearch.utils.models.out.OutDatePairsDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
+import com.flightsearch.utils.models.out.OutFlightDealDTO;
+import com.flightsearch.utils.models.out.OutGenerateTripDTO;
 import com.flightsearch.utils.models.out.OutTripDTO;
 import com.flightsearch.utils.models.out.OutUserDTO;
 
@@ -68,6 +71,9 @@ public interface FlightSearchServicesApi {
 
     @POST("api/trip/inviteUserToTrip/{itineraryId}/{user}")
     Call<List<String>> inviteUserToTrip(@Path("itineraryId") int itineraryId, @Path("user") String user);
+
+    @POST("api/trip/generate")
+    Call<OutGenerateTripDTO> generateTrip(@Body InGenerateTripDTO inGenerateTripDTO);
 
     //subregion comments
     @POST("api/trip/addComment/{itineraryId}/{comment}")

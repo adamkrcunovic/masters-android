@@ -65,6 +65,13 @@ public class EditProfileFragment extends Fragment {
         setTextWatcher();
         setOnFocusChangeListeners();
         setOnClickListeners();
+        setOnBackPressedListener();
+    }
+
+    private void setOnBackPressedListener() {
+        binding.materialToolbar.setNavigationOnClickListener(v -> {
+            activity.onBackPressed();
+        });
     }
 
     private void setTextWatcher() {

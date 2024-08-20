@@ -3,9 +3,11 @@ package com.flightsearch.utils.models.out;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class OutUserDTO {
+public class OutUserDTO implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -37,15 +39,15 @@ public class OutUserDTO {
 
     @SerializedName("friends")
     @Expose
-    private List<OutUserDTO> friends;
+    private List<OutUserDTO> friends = new ArrayList<>();
 
     @SerializedName("requests")
     @Expose
-    private List<OutUserDTO> requests;
+    private List<OutUserDTO> requests = new ArrayList<>();
 
     @SerializedName("pending")
     @Expose
-    private List<OutUserDTO> pending;
+    private List<OutUserDTO> pending = new ArrayList<>();
 
     public String getId() {
         return id;

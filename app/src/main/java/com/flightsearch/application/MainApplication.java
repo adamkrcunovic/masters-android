@@ -4,10 +4,12 @@ import android.app.Application;
 import android.content.SharedPreferences;
 
 import com.flightsearch.constants.ApplicationConstants;
+import com.flightsearch.utils.models.helper.TripsDTO;
 import com.flightsearch.utils.models.out.OutCountryDTO;
 import com.flightsearch.utils.models.out.OutTripDTO;
 import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
+import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +49,14 @@ public class MainApplication extends Application implements ApplicationConstants
         sharedPreferences.edit().remove(USER_AUTHORIZATION_TOKEN).apply();
     }
 
+    public void clearUserData() {
+        sharedPreferences.edit().remove(USER_DATA).apply();
+    }
+
+    public void clearTripsData() {
+        sharedPreferences.edit().remove(TRIPS_DATA).apply();
+    }
+
     public void storeUserAuthorizationToken(String token) {
         sharedPreferences.edit().putString(USER_AUTHORIZATION_TOKEN, token).apply();
     }
@@ -64,6 +74,7 @@ public class MainApplication extends Application implements ApplicationConstants
     }
 
     public List<List<OutTripDTO>> getMyTrips() {
+        if (myTrips == null) myTrips = (new Gson()).fromJson(sharedPreferences.getString(TRIPS_DATA, null), TripsDTO.class).getTrips();
         return myTrips;
     }
 
@@ -92,7 +103,7 @@ public class MainApplication extends Application implements ApplicationConstants
             @Override
             public void onResponse(Call<OutUserDTO> call, Response<OutUserDTO> response) {
                 if (response.isSuccessful()) {
-                    currentUser = response.body();
+                    setCurrentUser(response.body());
                     getTrips();
                 }
             }
@@ -132,6 +143,7 @@ public class MainApplication extends Application implements ApplicationConstants
                     myTrips.add(pastTrips);
                     myTrips.add(currentTrips);
                     myTrips.add(upcomingTrips);
+                    sharedPreferences.edit().putString(TRIPS_DATA, (new Gson()).toJson(new TripsDTO(myTrips))).apply();
                 }
             }
 
@@ -143,10 +155,18 @@ public class MainApplication extends Application implements ApplicationConstants
     }
 
     public OutUserDTO getCurrentUser() {
+        if (currentUser == null) currentUser = (new Gson()).fromJson(sharedPreferences.getString(USER_DATA, null), OutUserDTO.class);
         return currentUser;
     }
 
     public void setCurrentUser(OutUserDTO currentUser) {
         this.currentUser = currentUser;
+        sharedPreferences.edit().putString(USER_DATA, (new Gson()).toJson(currentUser)).apply();
+    }
+
+    public void signUserOut() {
+        clearUserAuthorizationToken();
+        clearUserData();
+        clearTripsData();
     }
 }

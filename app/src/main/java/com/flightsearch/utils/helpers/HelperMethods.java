@@ -12,13 +12,18 @@ import android.widget.EditText;
 
 import com.flightsearch.R;
 import com.flightsearch.utils.base.BaseActivity;
+import com.flightsearch.utils.models.helper.PlanAttractionsDTO;
+import com.flightsearch.utils.models.helper.PlanDayDTO;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class HelperMethods {
 
@@ -181,7 +186,7 @@ public class HelperMethods {
                         mon = mon < 1 ? 1 : mon > 12 ? (cal.get(Calendar.MONTH) + 1) : mon;
                         cal.set(Calendar.MONTH, mon - 1);
 
-                        year = (year < 1900) ? 1900 : Math.min(year, cal.get(Calendar.YEAR));
+                        year = (year < 1900) ? 1900 : Math.min(year, cal.get(Calendar.YEAR) + 1);
                         cal.set(Calendar.YEAR, year);
                         // ^ first set year for the line below to work correctly
                         //with leap years - otherwise, date e.g. 29/02/2012
@@ -248,6 +253,68 @@ public class HelperMethods {
                 HelperMethods.setAirportFieldErrors(inputEditText, inputLayout, activity);
             }
         });
+    }
+
+    public static List<PlanDayDTO> parseGeneratedText(String chatGPTText) {
+        List<String> separatedListByDashWithEmpty = Arrays.asList(chatGPTText.split("-----"));
+        List<String> separatedListByDashWithoutEmpty = new ArrayList<>();
+        for (String separatedByDash: separatedListByDashWithEmpty
+             ) {
+            String current = separatedByDash.trim();
+            if (!current.isEmpty()) separatedListByDashWithoutEmpty.add(current);
+        }
+
+        List<PlanDayDTO> daysPlans = new ArrayList<>();
+
+        for(int i = 0; i < separatedListByDashWithoutEmpty.size()/2; i++) {
+            String day = separatedListByDashWithoutEmpty.get(i*2);
+            String plan = separatedListByDashWithoutEmpty.get(i*2 + 1);
+            List<String> planSeparated = Arrays.asList(plan.split(" - |\n"));
+
+            List<PlanAttractionsDTO> dayPlans = new ArrayList<>();
+
+            for (int j = 0; j < planSeparated.size()/2; j++) {
+                String attraction = planSeparated.get(j*2);
+                String attractionPlan = planSeparated.get(j*2 + 1);
+
+                int indexOfOpenBracket = attraction.lastIndexOf(" (");
+                int indexOfLastComma = attraction.lastIndexOf(",");
+                int indexOfClosedBracket = attraction.lastIndexOf(")");
+
+                String attractionName = attraction.substring(0, indexOfOpenBracket);
+                String attractionLatitude = attraction.substring(indexOfOpenBracket + 2, indexOfLastComma);
+                String attractionLongitude = attraction.substring(indexOfLastComma + 2, indexOfClosedBracket);
+
+                dayPlans.add(new PlanAttractionsDTO(attractionName, Double.parseDouble(attractionLatitude), Double.parseDouble(attractionLongitude), attractionPlan));
+            }
+
+            daysPlans.add(new PlanDayDTO(day, dayPlans));
+
+        }
+        return daysPlans;
+    }
+
+    public static String getGoogleImageUrlItinerary(List<PlanAttractionsDTO> dayPlans) {
+        String url = "https://maps.googleapis.com/maps/api/staticmap?size=600x300&markers=color:red|";
+        String path = "&path=color:0x069AF3|weight:5|";
+        String latLon = "";
+        for(int i = 0; i < dayPlans.size(); i++) {
+            PlanAttractionsDTO dayPlan = dayPlans.get(i);
+            latLon += dayPlan.getAttractionLatitude().toString() + "," + dayPlan.getAttractionLongitude().toString() + (i != dayPlans.size() - 1 ? "|" : "");
+        }
+        String key = "&key=AIzaSyBf2073XVN3BGTgxI3k1RYz0_nTL4mYlKw";
+        return url + latLon + path + latLon + key;
+    }
+
+    public static String getGoogleImageUrlPin(List<PlanAttractionsDTO> dayPlans) {
+        String url = "https://maps.googleapis.com/maps/api/staticmap?size=600x300&path=color:0x069AF3|weight:3|";
+        String latLon = "";
+        for(int i = 0; i < dayPlans.size(); i++) {
+            PlanAttractionsDTO dayPlan = dayPlans.get(i);
+            latLon += dayPlan.getAttractionLatitude().toString() + "," + dayPlan.getAttractionLongitude().toString() + (i != dayPlans.size() - 1 ? "|" : "");
+        }
+        String key = "&key=AIzaSyBf2073XVN3BGTgxI3k1RYz0_nTL4mYlKw";
+        return url + latLon + key;
     }
 
 }

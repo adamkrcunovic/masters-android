@@ -84,7 +84,7 @@ public class ProfileFragment extends BaseFragment implements ApplicationConstant
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
                                 activity.dismissDialog();
-                                application.clearUserAuthorizationToken();
+                                application.signUserOut();
                                 startActivity(new Intent(activity, IntroActivity.class));
                                 activity.finish();
                             }
@@ -92,6 +92,7 @@ public class ProfileFragment extends BaseFragment implements ApplicationConstant
                             @Override
                             public void onFailure(Call<Void> call, Throwable throwable) {
                                 activity.dismissDialog();
+                                application.signUserOut();
                                 startActivity(new Intent(activity, IntroActivity.class));
                                 activity.finish();
                             }

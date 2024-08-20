@@ -30,6 +30,7 @@ import com.flightsearch.utils.helpers.HelperMethods;
 import com.flightsearch.utils.helpers.PasswordStrengthCalculatorHelper;
 import com.flightsearch.utils.models.in.InRegisterDTO;
 import com.flightsearch.utils.models.out.OutCountryDTO;
+import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 import java.util.Calendar;
 import java.util.Collections;
@@ -284,7 +285,7 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
         inRegisterDTO.setBirthday(HelperMethods.dateStringToStringBackend(binding.textInputEditTextBirthday.getText().toString()));
         inRegisterDTO.setPassword(binding.textInputEditTextPassword.getText().toString());
         // DEVICE, COUNTRY, PREFERENCE!!!
-        inRegisterDTO.setCountryId(1);
+        inRegisterDTO.setCountryId(selectedCountry.getId());
         inRegisterDTO.setDeviceId(MyFirebaseMessagingService.getDeviceId(sharedPreferences));
         inRegisterDTO.setPreferences(binding.textInputEditTextPreferences.getText().toString());
     }
@@ -298,6 +299,16 @@ public class RegisterFragment extends Fragment implements ApplicationConstants {
                 activity.dismissDialog();
                 if (response.isSuccessful()) {
                     application.storeUserAuthorizationToken(response.body());
+
+                    OutUserDTO user = new OutUserDTO();
+                    user.setName(inRegisterDTO.getName());
+                    user.setLastName(inRegisterDTO.getLastName());
+                    user.setEmail(inRegisterDTO.getEmail());
+                    user.setCountry(selectedCountry.getCountryName());
+                    user.setBirthday(inRegisterDTO.getBirthday());
+                    user.setPreferences(inRegisterDTO.getPreferences());
+                    application.setCurrentUser(user);
+
                     activity.navigateToNextScreen();
                 }
             }

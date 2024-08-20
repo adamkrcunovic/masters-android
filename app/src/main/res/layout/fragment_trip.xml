@@ -162,17 +162,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/textView_flight1ArrivalDate"
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="32dp">
+            android:layout_marginTop="24dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/materialButton_exactDatesActive"
+                android:id="@+id/materialButton_generateTrip"
                 style="@style/Theme.FlightSearch.Button.Filled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Generate Trip Itinerary"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginHorizontal="64dp"
+                android:layout_marginHorizontal="96dp"
                 android:visibility="gone"/>
 
             <TextView
@@ -187,7 +186,7 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:gravity="center"
-                android:paddingHorizontal="64dp"
+                android:paddingHorizontal="96dp"
                 android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
@@ -202,6 +201,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="32dp"
                 android:visibility="gone"/>
 
             <com.google.android.material.button.MaterialButton
@@ -215,7 +215,54 @@
                 app:layout_constraintStart_toEndOf="@id/materialButton_register"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
                 android:visibility="gone"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout_generatedTrip"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    style="@style/Widget.MaterialComponents.TabLayout.PrimarySurface"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textSize="17sp"
+                    app:tabIndicatorColor="@color/app_blue"
+                    app:tabSelectedTextColor="@color/black"
+                    app:tabTextColor="@color/app_text"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tabMode="scrollable"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_generatedPlan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/tabLayout"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/view_holder_attraction"/>
+
+                <ImageView
+                    android:id="@+id/imageView_itinerary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintTop_toBottomOf="@id/recyclerView_generatedPlan"/>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="0dp"
+                    android:layout_height="3dp"
+                    android:background="@color/app_blue"
+                    app:layout_constraintTop_toBottomOf="@id/imageView_itinerary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -224,7 +271,7 @@
             app:layout_constraintTop_toBottomOf="@id/constrainLayout_generateTrip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:layout_marginHorizontal="32dp"
             android:visibility="gone">
 

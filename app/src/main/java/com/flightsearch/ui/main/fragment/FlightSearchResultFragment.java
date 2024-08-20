@@ -45,6 +45,7 @@ public class FlightSearchResultFragment extends Fragment {
         getFlightSearchResults();
         setTabBar();
         setRecyclerView(0);
+        setOnBackPressedListener();
     }
 
     private void getFlightSearchResults() {
@@ -92,5 +93,11 @@ public class FlightSearchResultFragment extends Fragment {
             }
         });
         binding.recyclerView.setAdapter(adapter);
+    }
+
+    private void setOnBackPressedListener() {
+        binding.materialToolbar.setNavigationOnClickListener(v -> {
+            activity.onBackPressed();
+        });
     }
 }

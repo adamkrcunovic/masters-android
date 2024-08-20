@@ -20,6 +20,7 @@ import com.flightsearch.utils.base.BaseActivity;
 import com.flightsearch.utils.firebase.MyFirebaseMessagingService;
 import com.flightsearch.utils.helpers.HelperMethods;
 import com.flightsearch.utils.models.in.InLoginDTO;
+import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 
 import javax.inject.Inject;
@@ -103,10 +104,25 @@ public class SignInFragment extends Fragment {
         api.signIn(new InLoginDTO(binding.textInputEditTextEmail.getText().toString(), binding.textInputEditTextPassword.getText().toString(), MyFirebaseMessagingService.getDeviceId(sharedPreferences))).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                activity.dismissDialog();
                 if (response.isSuccessful()) {
                     application.storeUserAuthorizationToken(response.body());
-                    activity.navigateToNextScreen();
+                    api.getUserData().enqueue(new Callback<OutUserDTO>() {
+                        @Override
+                        public void onResponse(Call<OutUserDTO> call, Response<OutUserDTO> response) {
+                            activity.dismissDialog();
+                            if (response.isSuccessful()) {
+                                application.setCurrentUser(response.body());
+                                activity.navigateToNextScreen();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<OutUserDTO> call, Throwable throwable) {
+                            activity.dismissDialog();
+                        }
+                    });
+                } else {
+                    activity.dismissDialog();
                 }
             }
 
