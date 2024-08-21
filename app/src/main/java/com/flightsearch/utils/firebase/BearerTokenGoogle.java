@@ -27,7 +27,7 @@ public class BearerTokenGoogle implements ApplicationConstants {
     public static final String  firebaseMessagingScope = "https://www.googleapis.com/auth/firebase.messaging";
     public static Context context;
 
-    public static String getAccessToken() {
+    public static String getBearerToken() {
         try {
             String jsonString = "{\n" +
                     "  \"type\": \"service_account\",\n" +
@@ -47,9 +47,7 @@ public class BearerTokenGoogle implements ApplicationConstants {
             list.add(firebaseMessagingScope);
             GoogleCredentials googleCredentials = GoogleCredentials.fromStream(stream).createScoped(list);
             googleCredentials.refresh();
-            String accessToken = googleCredentials.getAccessToken().getTokenValue();
-            System.out.println("ACCESS TOKEN: " + accessToken);
-            return accessToken;
+            return googleCredentials.getAccessToken().getTokenValue();
         } catch (IOException e) {
             return "";
         }
@@ -77,7 +75,7 @@ public class BearerTokenGoogle implements ApplicationConstants {
                     }) {
                         @Override
                         public Map<String, String> getHeaders() throws AuthFailureError {
-                            String token = getAccessToken();
+                            String token = getBearerToken();
                             Map<String, String> header = new HashMap<>();
                             header.put("Authorization", "Bearer " + token);
                             return header;

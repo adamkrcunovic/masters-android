@@ -13,6 +13,14 @@
         android:layout_height="match_parent"
         android:visibility="gone">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:adjustViewBounds="true"
+            android:src="@drawable/guest"
+            android:layout_marginTop="-32dp"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/materialButton_register"
             style="@style/Theme.FlightSearch.Button.Filled"

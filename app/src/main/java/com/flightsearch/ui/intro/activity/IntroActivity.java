@@ -44,13 +44,13 @@ public class IntroActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                binding.buttonContinueAsGuest.setText(position == 3 ? "Continue as Guest" : "Skip");
+                binding.buttonContinueAsGuest.setText(position == 4 ? "Continue as Guest" : "Skip");
                 application.setIntroOpened();
             }
         });
         binding.buttonContinueAsGuest.setOnClickListener(v -> {
-            if (binding.viewPager.getCurrentItem() == 3) goToMainActivity();
-            else binding.viewPager.setCurrentItem(3);
+            if (binding.viewPager.getCurrentItem() == 4) goToMainActivity();
+            else binding.viewPager.setCurrentItem(4);
         });
     }
 

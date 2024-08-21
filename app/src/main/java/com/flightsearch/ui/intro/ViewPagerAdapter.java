@@ -21,8 +21,9 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
             case 0:
             case 1:
             case 2:
-                return IntroPictureFragment.newInstance(position + 1);
             case 3:
+                return IntroPictureFragment.newInstance(position + 1);
+            case 4:
                 return new IntroLastFragment();
             default:
                 return null;
@@ -31,6 +32,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 4;
+        return 5;
     }
 }

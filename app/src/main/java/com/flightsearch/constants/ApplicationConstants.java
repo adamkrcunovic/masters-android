@@ -3,7 +3,7 @@ package com.flightsearch.constants;
 public interface ApplicationConstants {
 
     public static final String MAIN_SHARE_PREFERENCE = "FLIGHT_SEARCH";
-    public static final String BASE_SERVER_URL = "https://f30b-212-200-65-35.ngrok-free.app";
+    public static final String BASE_SERVER_URL = "https://101a-212-200-65-40.ngrok-free.app";
     public static final String GOOGLE_MESSAGES_URL = "https://fcm.googleapis.com/v1/projects/masters-362af/messages:send";
 
     public static final String USER_AUTHORIZATION_TOKEN = "USER_AUTHORIZATION_TOKEN";

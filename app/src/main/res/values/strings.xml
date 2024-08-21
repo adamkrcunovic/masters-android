@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Flight Search</string>
+    <string name="app_name">Trip Planner App</string>
     <string name="hello_blank_fragment">Flight Search</string>
 
     <string name="sign_up_hint_first_name">Name*</string>
