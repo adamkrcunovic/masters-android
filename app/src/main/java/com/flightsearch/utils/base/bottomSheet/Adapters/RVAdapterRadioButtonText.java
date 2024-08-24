@@ -14,6 +14,7 @@ import com.flightsearch.utils.base.MyRecyclerViewHolder;
 import com.flightsearch.utils.base.bottomSheet.BottomSheetChooseRadio;
 import com.flightsearch.utils.models.helper.DayDTO;
 import com.flightsearch.utils.models.helper.MonthDTO;
+import com.flightsearch.utils.models.out.OutAirportDTO;
 import com.flightsearch.utils.models.out.OutCountryDTO;
 import com.flightsearch.utils.models.out.OutDatePairsDTO;
 
@@ -77,6 +78,10 @@ public class RVAdapterRadioButtonText extends RecyclerView.Adapter<MyRecyclerVie
             if (item instanceof OutDatePairsDTO) {
                 OutDatePairsDTO datePair = (OutDatePairsDTO) item;
                 binding.textViewRadioButtonText.setText(datePair.getStartDate() + " to " + datePair.getEndDate() + " (" + datePair.getDaysOff().size() + " day" + (datePair.getDaysOff().size() > 1 ? "s " : " ") + "off)");
+            }
+            if (item instanceof OutAirportDTO) {
+                OutAirportDTO airport = (OutAirportDTO) item;
+                binding.textViewRadioButtonText.setText(airport.getName());
             }
             binding.checkbox.setButtonDrawable(com.flightsearch.R.drawable.custom_checkbox_circle);
             binding.checkbox.setChecked(selectedItem == item);

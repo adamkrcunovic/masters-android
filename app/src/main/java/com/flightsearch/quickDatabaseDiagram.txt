@@ -1,0 +1,72 @@
+Country
+-
+Id PK int
+CountryName string
+
+PublicHoliday
+-
+Id PK int
+CountryId int FK >- Country.Id
+HolidayDate date
+
+User
+-
+Id PK string
+CountryId int FK >- Country.Id
+Email string
+Name string
+LastName string
+Preferences string
+DeviceIds null string
+
+Itinerary
+-
+Id PK int
+UserId string FK >- User.Id
+ItineraryName string
+Adults int
+TotalStayDuration null string
+ToDuration string
+ToSegmentsLength int
+LayoverToDuration null string
+FromDuration null string
+LayoverFromDuration null string
+CityVisit null string
+ChatGPTGeneratedText null string
+TotalPrice double
+CurrentPrice double
+PriceChangeNotificationType int
+Amount int
+Percentage int
+
+FlightSegment
+-
+Id PK int
+ItineraryId int FK >- Itinerary.Id
+From string
+To string
+Departure dateTime
+Arrival dateTime
+Duration string
+FlightCode string
+
+ItineraryMember
+-
+Id PK int
+ItineraryId int FK >- Itinerary.Id
+UserId string FK >- User.Id
+
+Comment
+-
+Id PK int
+ItineraryId int FK >- Itinerary.Id
+UserId int FK >- User.Id
+CommentText string
+DateCreated dateTime
+
+UserFriendRequest
+-
+Id PK int
+UserId1 string FK >- User.Id
+UserId2 string FK >- User.Id
+FriendStatus int

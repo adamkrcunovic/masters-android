@@ -4,13 +4,18 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.flightsearch.R;
@@ -24,13 +29,16 @@ import com.flightsearch.utils.models.enums.FlightSearchType;
 import com.flightsearch.utils.models.helper.DayDTO;
 import com.flightsearch.utils.models.helper.MonthDTO;
 import com.flightsearch.utils.models.in.InFlightSearchDTO;
+import com.flightsearch.utils.models.out.OutAirportDTO;
 import com.flightsearch.utils.models.out.OutDatePairsDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
+import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,6 +70,11 @@ public class SearchFragment extends Fragment {
 
     private InFlightSearchDTO flightSearchDTO;
 
+    private OutAirportDTO airport1 = null;
+    private OutAirportDTO airport2 = null;
+    private OutAirportDTO airport3 = null;
+    private OutAirportDTO airport4 = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +90,146 @@ public class SearchFragment extends Fragment {
         setOnClickListeners();
         setOnFocusChangeListeners();
         setCheckboxStatusChange();
+        setTextListeners();
+    }
+
+    private void setTextListeners() {
+        binding.textInputEditTextFrom1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!textChangedThroughBottomSheet) startSearchHandler(charSequence.toString(), 1000, binding.progressBar1, 1);
+                else textChangedThroughBottomSheet = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        binding.textInputEditTextTo1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!textChangedThroughBottomSheet) startSearchHandler(charSequence.toString(), 1000, binding.progressBar2, 2);
+                else textChangedThroughBottomSheet = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        binding.textInputEditTextFrom2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!textChangedThroughBottomSheet) startSearchHandler(charSequence.toString(), 1000, binding.progressBar3, 3);
+                else textChangedThroughBottomSheet = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        binding.textInputEditTextTo2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!textChangedThroughBottomSheet) startSearchHandler(charSequence.toString(), 1000, binding.progressBar4, 4);
+                else textChangedThroughBottomSheet = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+
+    private final Handler handlerQueryTextChange = new Handler();
+    private Runnable runnableQueryTextChange;
+    boolean textChangedThroughBottomSheet = false;
+    private void startSearchHandler(String newText, long mills, ProgressBar progressBar, int airportNumber) {
+        if (newText == null || newText.length() == 0) {
+            progressBar.setVisibility(View.GONE);
+            if (airportNumber == 1) airport1 = null;
+            if (airportNumber == 2) airport2 = null;
+            if (airportNumber == 3) airport3 = null;
+            if (airportNumber == 4) airport4 = null;
+            handlerQueryTextChange.removeCallbacks(runnableQueryTextChange);
+            return;
+        }
+        progressBar.setVisibility(View.VISIBLE);
+
+        handlerQueryTextChange.removeCallbacks(runnableQueryTextChange);
+        runnableQueryTextChange = () -> {
+            performSearch(newText, progressBar, airportNumber);
+        };
+        handlerQueryTextChange.postDelayed(runnableQueryTextChange, mills);
+    }
+
+    BottomSheetChooseRadio bottomSheetChooseRadio = null;
+    private void performSearch(String result, ProgressBar progressBar, int airportNumber) {
+        if (result != null && result.length() > 0) {
+            progressBar.setVisibility(View.VISIBLE);
+            api.getAirports(result).enqueue(new Callback<List<OutAirportDTO>>() {
+                @Override
+                public void onResponse(Call<List<OutAirportDTO>> call, Response<List<OutAirportDTO>> response) {
+                    progressBar.setVisibility(View.GONE);
+                    HelperMethods.hideKeyboard(activity);
+                    if (response.isSuccessful()) {
+                        bottomSheetChooseRadio = new BottomSheetChooseRadio(Collections.singletonList(response.body()), activity, new BottomSheetChooseRadio.OnObjectSelectListener() {
+                            @Override
+                            public void onObjectSelectChangeListener(Object o) {
+                                textChangedThroughBottomSheet = true;
+                                OutAirportDTO selectedAirport = (OutAirportDTO) o;
+                                if (airportNumber == 1) {
+                                    airport1 = selectedAirport;
+                                    binding.textInputEditTextFrom1.setText(selectedAirport.getIataCode());
+                                }
+                                if (airportNumber == 2) {
+                                    airport2 = selectedAirport;
+                                    binding.textInputEditTextTo1.setText(selectedAirport.getIataCode());
+                                }
+                                if (airportNumber == 3) {
+                                    airport3 = selectedAirport;
+                                    binding.textInputEditTextFrom2.setText(selectedAirport.getIataCode());
+                                }
+                                if (airportNumber == 4) {
+                                    airport4 = selectedAirport;
+                                    binding.textInputEditTextTo2.setText(selectedAirport.getIataCode());
+                                }
+                                bottomSheetChooseRadio.dismiss();
+                            }
+                        }, "Airports", null);
+                        bottomSheetChooseRadio.show(activity);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<OutAirportDTO>> call, Throwable throwable) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     private void setCheckboxStatusChange() {

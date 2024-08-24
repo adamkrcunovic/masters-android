@@ -5,6 +5,7 @@ import com.flightsearch.utils.models.in.InFlightSearchDTO;
 import com.flightsearch.utils.models.in.InGenerateTripDTO;
 import com.flightsearch.utils.models.in.InLoginDTO;
 import com.flightsearch.utils.models.in.InRegisterDTO;
+import com.flightsearch.utils.models.out.OutAirportDTO;
 import com.flightsearch.utils.models.out.OutCountryDTO;
 import com.flightsearch.utils.models.out.OutDatePairsDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
@@ -46,6 +47,9 @@ public interface FlightSearchServicesApi {
     //region flight tickets
     @GET("api/country")
     Call<List<OutCountryDTO>> getCountries();
+
+    @GET("api/flights/getAirports/{searchTerm}")
+    Call<List<OutAirportDTO>> getAirports(@Path("searchTerm") String searchTerm);
 
     @GET("api/flights/getTravelPairs")
     Call<List<OutDatePairsDTO>> getDatePairs(@Query("TotalDays") int totalDays, @Query("DaysOff") int DaysOff);
