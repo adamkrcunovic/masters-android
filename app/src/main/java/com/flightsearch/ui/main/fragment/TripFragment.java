@@ -1,5 +1,6 @@
 package com.flightsearch.ui.main.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,16 +18,23 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.flightsearch.R;
 import com.flightsearch.application.MainApplication;
+import com.flightsearch.constants.ApplicationConstants;
 import com.flightsearch.databinding.FragmentTripBinding;
 import com.flightsearch.ui.main.activity.MainActivity;
 import com.flightsearch.ui.main.adapter.RVAdapterAttraction;
 import com.flightsearch.ui.main.adapter.RVAdapterComment;
 import com.flightsearch.ui.main.adapter.RVAdapterFlightDealItinerary;
+import com.flightsearch.ui.userEntry.activity.UserEntryActivity;
+import com.flightsearch.utils.base.BaseFragment;
+import com.flightsearch.utils.base.bottomSheet.BottomSheetChooseRadio;
+import com.flightsearch.utils.base.bottomSheet.BottomSheetInfo;
 import com.flightsearch.utils.firebase.BearerTokenGoogle;
 import com.flightsearch.utils.helpers.HelperMethods;
+import com.flightsearch.utils.models.enums.PriceChangeNotificationType;
 import com.flightsearch.utils.models.helper.PlanAttractionsDTO;
 import com.flightsearch.utils.models.helper.PlanDayDTO;
 import com.flightsearch.utils.models.in.InGenerateTripDTO;
+import com.flightsearch.utils.models.in.InTripDTO;
 import com.flightsearch.utils.models.out.OutCommentDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
 import com.flightsearch.utils.models.out.OutFlightDealDTO;
@@ -41,6 +49,7 @@ import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +61,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @AndroidEntryPoint
-public class TripFragment extends Fragment {
+public class TripFragment extends BaseFragment implements ApplicationConstants {
 
     @Inject
     MainApplication application;
@@ -62,10 +71,15 @@ public class TripFragment extends Fragment {
 
     private FragmentTripBinding binding;
     private OutFlightDealDTO flightDeal;
+    private int adults;
     private OutTripDTO flightTrip;
     private List<PlanDayDTO> dayPlans;
 
     private MainActivity activity;
+
+    private String setNotificationTypeSelection = "Not Receiving";
+    private List<String> notificationTypeSelection = new ArrayList<String>() {{add("Not Receiving");add("Receiving - Percentage");add("Receiving - Amount");}};
+    private String ChatGPTText = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,8 +96,8 @@ public class TripFragment extends Fragment {
         if (flightTrip != null && activity.usersToAddToItinerary.size() > 0) {
             flightTrip.getInvitedMembers().addAll(activity.usersToAddToItinerary);
             activity.usersToAddToItinerary = new ArrayList<>();
-            setLayout();
         }
+        setLayout();
     }
 
     @Override
@@ -99,13 +113,17 @@ public class TripFragment extends Fragment {
     private void getTrip() {
         flightDeal = (OutFlightDealDTO) TripFragmentArgs.fromBundle(getArguments()).getFlightDeal();
         if (flightDeal instanceof OutTripDTO) flightTrip = (OutTripDTO) flightDeal;
+        adults = TripFragmentArgs.fromBundle(getArguments()).getAdults();
     }
 
     private void setLayout() {
         boolean isTrip = flightTrip != null;
+        boolean amICreator = application.isUserLogged() && isTrip && flightTrip.creator.getId().equals(application.getCurrentUser().getId());
 
         if (isTrip) {
-            boolean amICreator = flightTrip.creator.getId().equals(application.getCurrentUser().getId());
+            binding.textViewOldPriceValue.setText(Math.round(flightTrip.getTotalPrice()) + "€");
+            binding.textInputLayoutItineraryName.setVisibility(View.GONE);
+            binding.textViewTripNameTitle.setVisibility(View.GONE);
 
             binding.textViewCreatorTitle.setVisibility(View.VISIBLE);
             binding.textViewCreator.setVisibility(View.VISIBLE);
@@ -133,6 +151,11 @@ public class TripFragment extends Fragment {
             binding.view2.setVisibility(View.VISIBLE);
             binding.constraintLayoutComment.setVisibility(View.VISIBLE);
             binding.textViewCommenterName.setText(application.getCurrentUser().getName() + " " + application.getCurrentUser().getLastName());
+            binding.textViewCurrentPriceValue.setText(Math.round(flightTrip.getCurrentPrice()) + "€");
+        } else {
+            binding.textViewOldPriceTitle.setVisibility(View.GONE);
+            binding.textViewOldPriceValue.setVisibility(View.GONE);
+            binding.textViewCurrentPriceValue.setText(Math.round(flightDeal.getTotalPrice()) + "€");
         }
 
         binding.materialToolbar.setTitle(isTrip ? flightTrip.getItineraryName() : "Flight Deal");
@@ -144,15 +167,26 @@ public class TripFragment extends Fragment {
         RVAdapterFlightDealItinerary adapter1 = new RVAdapterFlightDealItinerary(flightDeal.getToSegments(), flightDeal.getLayoverToDuration());
         binding.recyclerViewFlight1.setAdapter(adapter1);
 
+        binding.materialButtonSignIn.setVisibility(!application.isUserLogged() ? View.VISIBLE : View.GONE);
+        binding.materialButtonRegister.setVisibility(!application.isUserLogged() ? View.VISIBLE : View.GONE);
+        binding.textViewSignInRegisterText.setVisibility(!application.isUserLogged() ? View.VISIBLE : View.GONE);
+
         if (flightDeal.getFromSegments() != null && !flightDeal.getFromSegments().isEmpty()) {
 
             if (isTrip) {
+                ChatGPTText = flightTrip.getChatGPTGeneratedText();
                 if (flightTrip.getChatGPTGeneratedText() == null || flightTrip.getChatGPTGeneratedText().length() == 0) {
                     binding.materialButtonGenerateTrip.setVisibility(View.VISIBLE);
                 } else {
-                    dayPlans = HelperMethods.parseGeneratedText(flightTrip.getChatGPTGeneratedText());
-                    setGeneratedPlan();
+                    try {
+                        dayPlans = HelperMethods.parseGeneratedText(flightTrip.getChatGPTGeneratedText());
+                        setGeneratedPlan();
+                    } catch (Exception e) {
+
+                    }
                 }
+            } else {
+                binding.materialButtonGenerateTrip.setVisibility(application.isUserLogged() ? View.VISIBLE : View.GONE);
             }
 
             binding.constraintLayoutFlight2.setVisibility(View.VISIBLE);
@@ -167,6 +201,8 @@ public class TripFragment extends Fragment {
             RVAdapterFlightDealItinerary adapter2 = new RVAdapterFlightDealItinerary(flightDeal.getFromSegments(), flightDeal.getLayoverFromDuration());
             binding.recyclerViewFlight2.setAdapter(adapter2);
         }
+        binding.constraintLayoutAddTrip.setVisibility(!isTrip || amICreator ? View.VISIBLE : View.GONE);
+        binding.materialButtonSaveTrip.setVisibility(!isTrip || amICreator ? View.VISIBLE : View.GONE);
     }
 
     private void setOnClickListeners() {
@@ -207,7 +243,61 @@ public class TripFragment extends Fragment {
         binding.materialButtonGenerateTrip.setOnClickListener(v -> {
             callGenerateTrip();
         });
+        binding.materialButtonSignIn.setOnClickListener(v -> {
+            startActivity((new Intent(getActivity(), UserEntryActivity.class)).putExtra(NEXT_USER_ENTRY_PAGE, UserEntryActivity.NavigationMode.GO_BACK.getValue()).putExtra(INVERSE_USER_ENTRY_PAGES, true));
+        });
+        binding.materialButtonRegister.setOnClickListener(v -> {
+            startActivity((new Intent(getActivity(), UserEntryActivity.class)).putExtra(NEXT_USER_ENTRY_PAGE, UserEntryActivity.NavigationMode.GO_BACK.getValue()).putExtra(INVERSE_USER_ENTRY_PAGES, false));
+        });
+        binding.materialButtonEditNotificationType.setOnClickListener(v -> {
+            bottomSheetChooseRadioNotificationType = new BottomSheetChooseRadio(Arrays.asList(notificationTypeSelection), activity, new BottomSheetChooseRadio.OnObjectSelectListener() {
+                @Override
+                public void onObjectSelectChangeListener(Object o) {
+                    String selectedType = (String) o;
+                    if (selectedType.equals("Not Receiving")) {
+                        binding.textInputLayoutNumber.setVisibility(View.GONE);
+                    }
+                    if (selectedType.equals("Receiving - Percentage")) {
+                        binding.textInputLayoutNumber.setVisibility(View.VISIBLE);
+                        binding.textInputEditTextNumber.setHint(activity.getString(R.string.hint_percentage));
+                    }
+                    if (selectedType.equals("Receiving - Amount")) {
+                        binding.textInputLayoutNumber.setVisibility(View.VISIBLE);
+                        binding.textInputEditTextNumber.setHint(activity.getString(R.string.hint_amount));
+                    }
+                    binding.textViewSaveTypeValue.setText(selectedType);
+                    setNotificationTypeSelection = selectedType;
+                    bottomSheetChooseRadioNotificationType.dismiss();
+                }
+            }, "Choose notification receiving type", setNotificationTypeSelection);
+            bottomSheetChooseRadioNotificationType.show(activity);
+        });
+        binding.imageViewInfo.setOnClickListener(v -> {
+            BottomSheetInfo bottomSheetInfo = new BottomSheetInfo("Amount and percentage notifications", "You will be notified when price goes up or drops down for your defined amount in percentages or euros.");
+            bottomSheetInfo.show(activity);
+        });
+        binding.materialButtonChangePlan.setOnClickListener(v -> {
+            HelperMethods.hideKeyboard(activity);
+            String changePlanText = binding.textInputEditTextChangePlan.getText().toString();
+            if (changePlanText.isEmpty()) binding.textInputLayoutChangePlan.setError(activity.getString(R.string.error_field_required));
+            else {
+                //do change plan!!!
+            }
+        });
+        binding.materialButtonSaveTrip.setOnClickListener(v -> {
+            HelperMethods.hideKeyboard(activity);
+            String itineraryName = binding.textInputEditTextItineraryName.getText().toString();
+            if (itineraryName.isEmpty()) binding.textInputLayoutItineraryName.setError(activity.getString(R.string.error_field_required));
+            else {
+                if (binding.textInputLayoutNumber.getVisibility() == View.VISIBLE && binding.textInputEditTextNumber.getText().toString().isEmpty()) binding.textInputLayoutNumber.setError(activity.getString(R.string.error_field_required));
+                else {
+                    int value = Integer.valueOf(binding.textInputEditTextNumber.getText().toString());
+                    saveItinerary(itineraryName, value);
+                }
+            }
+        });
     }
+    BottomSheetChooseRadio bottomSheetChooseRadioNotificationType = null;
 
     private void callGenerateTrip() {
         activity.showDialog();
@@ -218,6 +308,7 @@ public class TripFragment extends Fragment {
                 if (response.isSuccessful()) {
                     List<PlanDayDTO> parsedGeneratedTripData = HelperMethods.parseGeneratedText(response.body().getGeneratedTrip());
                     dayPlans = parsedGeneratedTripData;
+                    ChatGPTText = response.body().getGeneratedTrip();
                     setGeneratedPlan();
                 }
             }
@@ -261,6 +352,9 @@ public class TripFragment extends Fragment {
         setChatGPTText(0);
         binding.materialButtonGenerateTrip.setVisibility(View.GONE);
         binding.constraintLayoutGeneratedTrip.setVisibility(View.VISIBLE);
+        boolean isTrip = flightTrip != null;
+        boolean amICreator = application.isUserLogged() && isTrip && flightTrip.creator.getId().equals(application.getCurrentUser().getId());
+        binding.constraintLayoutChangePlan.setVisibility(!isTrip || amICreator ? View.VISIBLE : View.GONE);
     }
 
     private void setChatGPTText(int i) {
@@ -273,8 +367,16 @@ public class TripFragment extends Fragment {
         binding.textInputEditTextComment.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 binding.textInputLayoutComment.setError(null);
-            } else {
-                setCommentErrors();
+            }
+        });
+        binding.textInputEditTextItineraryName.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                binding.textInputLayoutItineraryName.setError(null);
+            }
+        });
+        binding.textInputEditTextNumber.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                binding.textInputLayoutNumber.setError(null);
             }
         });
     }
@@ -286,6 +388,40 @@ public class TripFragment extends Fragment {
     private void setOnBackPressedListener() {
         binding.materialToolbar.setNavigationOnClickListener(v -> {
             activity.onBackPressed();
+        });
+    }
+
+    private void saveItinerary(String itineraryName, int value) {
+        PriceChangeNotificationType priceChangeNotificationType = PriceChangeNotificationType.NotSet;
+        int amount = 0;
+        int percentage = 0;
+        if (setNotificationTypeSelection.equals("Not Receiving")) {
+            priceChangeNotificationType = PriceChangeNotificationType.NotSet;
+        }
+        if (setNotificationTypeSelection.equals("Receiving - Percentage")) {
+            priceChangeNotificationType = PriceChangeNotificationType.Percentage;
+            percentage = value;
+        }
+        if (setNotificationTypeSelection.equals("Receiving - Amount")) {
+            priceChangeNotificationType = PriceChangeNotificationType.Amount;
+            amount = value;
+        }
+        InTripDTO inTripDTO = new InTripDTO(itineraryName, adults, flightDeal, ChatGPTText, priceChangeNotificationType, percentage, amount);
+        activity.showDialog();
+        api.saveTrip(inTripDTO).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                activity.dismissDialog();
+                if (response.isSuccessful()) {
+                    activity.onBackPressed();
+                    activity.onBackPressed();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable throwable) {
+                activity.dismissDialog();
+            }
         });
     }
 }

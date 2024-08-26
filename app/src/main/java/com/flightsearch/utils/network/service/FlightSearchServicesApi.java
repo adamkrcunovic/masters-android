@@ -5,6 +5,7 @@ import com.flightsearch.utils.models.in.InFlightSearchDTO;
 import com.flightsearch.utils.models.in.InGenerateTripDTO;
 import com.flightsearch.utils.models.in.InLoginDTO;
 import com.flightsearch.utils.models.in.InRegisterDTO;
+import com.flightsearch.utils.models.in.InTripDTO;
 import com.flightsearch.utils.models.out.OutAirportDTO;
 import com.flightsearch.utils.models.out.OutCountryDTO;
 import com.flightsearch.utils.models.out.OutDatePairsDTO;
@@ -78,6 +79,9 @@ public interface FlightSearchServicesApi {
 
     @POST("api/trip/generate")
     Call<OutGenerateTripDTO> generateTrip(@Body InGenerateTripDTO inGenerateTripDTO);
+
+    @POST("api/trip/saveItinerary")
+    Call<Void> saveTrip(@Body InTripDTO inTripDTO);
 
     //subregion comments
     @POST("api/trip/addComment/{itineraryId}/{comment}")

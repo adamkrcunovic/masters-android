@@ -5,7 +5,7 @@
     <string name="sign_up_hint_first_name">Name*</string>
     <string name="sign_up_hint_last_name">Last Name*</string>
     <string name="sign_up_hint_email">Email*</string>
-    <string name="sign_up_hint_birthday">Birthday*</string>
+    <string name="sign_up_hint_birthday">Birthday</string>
     <string name="sign_up_hint_country">Country*</string>
     <string name="sign_up_hint_preferences">Travel preferences</string>
     <string name="sign_up_hint_password">Password*</string>
@@ -29,4 +29,9 @@
     <string name="search_departure">Departure*</string>
     <string name="search_arrival">Return*</string>
     <string name="search_from">From*</string>
+
+    <string name="hint_percentage">Percentage*</string>
+    <string name="hint_amount">Amount*</string>
+    <string name="hint_changePlan">To change generated plan write here</string>
+
 </resources>

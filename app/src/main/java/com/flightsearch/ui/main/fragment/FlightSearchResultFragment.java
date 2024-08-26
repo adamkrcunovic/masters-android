@@ -29,6 +29,7 @@ public class FlightSearchResultFragment extends Fragment {
     private MainActivity activity;
 
     private OutFlightDTO flightSearchResults;
+    private int adults;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +51,7 @@ public class FlightSearchResultFragment extends Fragment {
 
     private void getFlightSearchResults() {
         flightSearchResults = (OutFlightDTO) FlightSearchResultFragmentArgs.fromBundle(getArguments()).getSearchFlightResult();
+        adults = FlightSearchResultFragmentArgs.fromBundle(getArguments()).getAdults();
     }
 
     private void setTabBar() {
@@ -89,9 +91,9 @@ public class FlightSearchResultFragment extends Fragment {
         RVAdapterFlightDeal adapter = new RVAdapterFlightDeal(flightsToShowOnScreen, new RVAdapterFlightDeal.OnFlightDealClickListener() {
             @Override
             public void onClick(OutFlightDealDTO deal) {
-                activity.getNavController().navigate(FlightSearchResultFragmentDirections.actionFlightSearchResultFragmentToTripFragment(deal));
+                activity.getNavController().navigate(FlightSearchResultFragmentDirections.actionFlightSearchResultFragmentToTripFragment(deal).setAdults(adults));
             }
-        });
+        }, position == 2);
         binding.recyclerView.setAdapter(adapter);
     }
 

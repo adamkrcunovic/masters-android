@@ -46,6 +46,9 @@
         <argument
             android:name="searchFlightResult"
             app:argType="java.io.Serializable" />
+        <argument
+            android:name="adults"
+            app:argType="integer" />
         <action
             android:id="@+id/action_flightSearchResultFragment_to_tripFragment"
             app:destination="@id/tripFragment" />
@@ -84,6 +87,10 @@
         <argument
             android:name="flightDeal"
             app:argType="java.io.Serializable" />
+        <argument
+            android:name="adults"
+            app:argType="integer"
+            android:defaultValue="-1"/>
         <action
             android:id="@+id/action_tripFragment_to_searchFriendsFragment"
             app:destination="@id/searchFriendsFragment" />

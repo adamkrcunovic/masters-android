@@ -19,14 +19,16 @@ public class RVAdapterFlightDeal extends RecyclerView.Adapter<MyRecyclerViewHold
 
     private List<OutFlightDealDTO> flightDeals;
     private OnFlightDealClickListener listener;
+    private boolean isCityVisit;
 
     public interface OnFlightDealClickListener {
         void onClick(OutFlightDealDTO deal);
     }
 
-    public RVAdapterFlightDeal(List<OutFlightDealDTO> flightDeals, OnFlightDealClickListener listener) {
+    public RVAdapterFlightDeal(List<OutFlightDealDTO> flightDeals, OnFlightDealClickListener listener, boolean isCityVisit) {
         this.flightDeals = flightDeals;
         this.listener = listener;
+        this.isCityVisit = isCityVisit;
     }
 
     @NonNull
@@ -113,6 +115,21 @@ public class RVAdapterFlightDeal extends RecyclerView.Adapter<MyRecyclerViewHold
                 binding.materialButtonPrice.setOnClickListener(v -> listener.onClick(item));
                 binding.materialCardView.setOnClickListener(v -> listener.onClick(item));
             }
+
+            //region cityVisit
+            if (isCityVisit) {
+                binding.constraintLayoutCityVisit.setVisibility(View.VISIBLE);
+                String cities = item.getCityVisit().toString();
+                binding.textViewCityVisitValue.setText(cities.substring(1, cities.length() - 1));
+            }
+
+            binding.materialCardView.setOnClickListener(v -> {
+                listener.onClick(item);
+            });
+
+            binding.materialButtonPrice.setOnClickListener(v -> {
+                listener.onClick(item);
+            });
         }
     }
 

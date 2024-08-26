@@ -179,7 +179,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/textView_creator"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="Old and Current price:"
+                android:text="Current and Old price:"
                 android:fontFamily="@font/roboto_regular"
                 android:textColor="@color/app_text"
                 android:layout_marginTop="12dp"

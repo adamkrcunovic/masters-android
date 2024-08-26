@@ -12,6 +12,7 @@ import com.flightsearch.databinding.ViewHolderRadioButtonTextBinding;
 import com.flightsearch.utils.base.BaseActivity;
 import com.flightsearch.utils.base.MyRecyclerViewHolder;
 import com.flightsearch.utils.base.bottomSheet.BottomSheetChooseRadio;
+import com.flightsearch.utils.helpers.HelperMethods;
 import com.flightsearch.utils.models.helper.DayDTO;
 import com.flightsearch.utils.models.helper.MonthDTO;
 import com.flightsearch.utils.models.out.OutAirportDTO;
@@ -77,14 +78,18 @@ public class RVAdapterRadioButtonText extends RecyclerView.Adapter<MyRecyclerVie
             }
             if (item instanceof OutDatePairsDTO) {
                 OutDatePairsDTO datePair = (OutDatePairsDTO) item;
-                binding.textViewRadioButtonText.setText(datePair.getStartDate() + " to " + datePair.getEndDate() + " (" + datePair.getDaysOff().size() + " day" + (datePair.getDaysOff().size() > 1 ? "s " : " ") + "off)");
+                binding.textViewRadioButtonText.setText(HelperMethods.dateStringBEToDateWithName(datePair.getStartDate()) + " - " + HelperMethods.dateStringBEToDateWithName(datePair.getEndDate()) + " (" + datePair.getDaysOff().size() + " day" + (datePair.getDaysOff().size() > 1 ? "s " : " ") + "off)");
             }
             if (item instanceof OutAirportDTO) {
                 OutAirportDTO airport = (OutAirportDTO) item;
                 binding.textViewRadioButtonText.setText(airport.getName());
             }
+            if (item instanceof String) {
+                binding.textViewRadioButtonText.setText((String)item);
+                binding.checkbox.setChecked(selectedItem.equals(item));
+            }
             binding.checkbox.setButtonDrawable(com.flightsearch.R.drawable.custom_checkbox_circle);
-            binding.checkbox.setChecked(selectedItem == item);
+            if (!(item instanceof String)) binding.checkbox.setChecked(selectedItem == item);
             binding.constraintLayoutCard.setOnClickListener(v -> {
                 listener.onObjectSelectChangeListener(item);
             });

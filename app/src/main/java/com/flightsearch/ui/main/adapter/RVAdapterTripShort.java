@@ -92,7 +92,7 @@ public class RVAdapterTripShort extends RecyclerView.Adapter<MyRecyclerViewHolde
             if (showPrice) {
                 binding.textViewCurrentPriceTitle.setVisibility(View.VISIBLE);
                 binding.textViewCurrentPrice.setVisibility(View.VISIBLE);
-                binding.textViewCurrentPrice.setText(item.getTotalPrice() + "€ / " + item.getCurrentPrice() + "€");
+                binding.textViewCurrentPrice.setText(Math.round(item.getCurrentPrice()) + "€ / " + Math.round(item.getTotalPrice()) + "€");
             }
             
             String members = "";

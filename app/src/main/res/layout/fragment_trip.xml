@@ -34,10 +34,92 @@
             android:paddingBottom="32dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout_members"
+            android:id="@+id/constraintLayout_prices"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:background="@color/white">
+
+            <View
+                android:id="@+id/viewPrices1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/customize_separator_color"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:id="@+id/textView_currentPriceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="Current Price"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/textView_currentPriceValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/app_blue"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textView_currentPriceTitle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="351 €"
+                android:layout_marginStart="32dp"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/textView_oldPriceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="Old Price"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/textView_oldPriceValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/app_blue"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textView_currentPriceTitle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="351 €"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="16dp"/>
+
+            <View
+                android:id="@+id/viewPrices2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/customize_separator_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout_members"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout_prices"
             android:layout_marginTop="16dp">
 
             <TextView
@@ -266,9 +348,58 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout_changePlan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/constrainLayout_generateTrip"
+                android:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout_changePlan"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/materialButton_changePlan"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textInputEditText_changePlan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:hint="@string/hint_changePlan"
+                        android:inputType="textPersonName|textCapSentences|textMultiLine">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/materialButton_changePlan"
+                    style="@style/Theme.FlightSearch.Button.Outline.Oval.WhiteBackground"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Change"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="32dp"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="12dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout_flight2"
-            app:layout_constraintTop_toBottomOf="@id/constrainLayout_generateTrip"
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout_changePlan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -439,6 +570,159 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout_addTrip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/constrainLayout_commentSection"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <View
+                    android:id="@+id/viewAddTrip1"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/customize_separator_color"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <TextView
+                    android:id="@+id/textView_tripNameTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="Choose trip name"
+                    android:fontFamily="@font/roboto_regular"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout_itineraryName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:errorEnabled="true"
+                    app:layout_constraintTop_toBottomOf="@id/textView_tripNameTitle"
+                    android:layout_marginHorizontal="32dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/textInputEditText_itineraryName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_light"
+                        android:hint="@string/sign_up_hint_first_name"
+                        android:inputType="textPersonName|textCapSentences"
+                        android:singleLine="true">
+
+                    </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout_inner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/textInputLayout_itineraryName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/materialButton_editNotificationType"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp">
+
+                    <TextView
+                        android:id="@+id/textView_saveTypeTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:text="Choose notification receive mode"
+                        android:fontFamily="@font/roboto_regular"
+                        android:textColor="@color/black"/>
+
+                    <ImageView
+                        android:id="@+id/imageView_info"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_info"
+                        app:tint="@color/app_blue"
+                        android:layout_marginStart="4dp"
+                        app:layout_constraintBottom_toBottomOf="@id/textView_saveTypeTitle"
+                        app:layout_constraintStart_toEndOf="@id/textView_saveTypeTitle"
+                        app:layout_constraintTop_toTopOf="@id/textView_saveTypeTitle" />
+
+                    <TextView
+                        android:id="@+id/textView_saveTypeValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/textView_saveTypeTitle"
+                        android:text="Not Receiving"
+                        android:fontFamily="@font/roboto_light"
+                        android:textColor="@color/app_text"
+                        android:layout_marginTop="4dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayout_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        app:layout_constraintTop_toBottomOf="@id/textView_saveTypeValue"
+                        android:visibility="gone">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textInputEditText_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/roboto_light"
+                            tools:hint="@string/hint_percentage"
+                            android:inputType="number"
+                            android:singleLine="true">
+
+                        </com.google.android.material.textfield.TextInputEditText>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/materialButton_editNotificationType"
+                    style="@style/Theme.FlightSearch.Button.Outline.Oval.WhiteBackground"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Edit"
+                    app:layout_constraintTop_toTopOf="@id/constraintLayout_inner"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintLayout_inner"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="32dp"
+                    android:textSize="14sp"/>
+
+                <View
+                    android:id="@+id/viewAddTrip2"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/customize_separator_color"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/materialButton_saveTrip"
+                style="@style/Theme.FlightSearch.Button.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Trip"
+                app:layout_constraintTop_toBottomOf="@id/constraintLayout_addTrip"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="32dp"
+                android:visibility="gone"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

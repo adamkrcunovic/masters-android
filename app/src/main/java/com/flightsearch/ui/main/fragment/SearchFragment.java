@@ -32,6 +32,7 @@ import com.flightsearch.utils.models.in.InFlightSearchDTO;
 import com.flightsearch.utils.models.out.OutAirportDTO;
 import com.flightsearch.utils.models.out.OutDatePairsDTO;
 import com.flightsearch.utils.models.out.OutFlightDTO;
+import com.flightsearch.utils.models.out.OutFlightDealDTO;
 import com.flightsearch.utils.models.out.OutUserDTO;
 import com.flightsearch.utils.network.service.FlightSearchServicesApi;
 import com.google.android.material.button.MaterialButton;
@@ -549,7 +550,7 @@ public class SearchFragment extends Fragment {
             public void onResponse(Call<OutFlightDTO> call, Response<OutFlightDTO> response) {
                 activity.dismissDialog();
                 if (response.isSuccessful()) {
-                    activity.getNavController().navigate(SearchFragmentDirections.actionSearchFragmentToFlightSearchResultFragment(response.body()));
+                    activity.getNavController().navigate(SearchFragmentDirections.actionSearchFragmentToFlightSearchResultFragment(response.body(), flightSearchDTO.getAdults()));
                 }
             }
 
