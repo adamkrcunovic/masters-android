@@ -73,44 +73,46 @@ public class MyTripsFragment extends BaseFragment implements ApplicationConstant
         } else {
             binding.tabLayout.setVisibility(View.VISIBLE);
             binding.recyclerView.setVisibility(View.VISIBLE);
-            if (application.getMyTrips() != null && !application.getMyTrips().get(1).isEmpty()) {
-                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("CURRENT"));
-                setLayout(application.getMyTrips().get(1), false);
-            }
-            if (application.getMyTrips() != null && !application.getMyTrips().get(0).isEmpty()) {
-                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("PAST"));
-                setLayout(application.getMyTrips().get(0), false);
-            }
-            if (application.getMyTrips() != null && !application.getMyTrips().get(2).isEmpty()) {
-                binding.tabLayout.addTab(binding.tabLayout.newTab().setText("UPCOMING"));
-                setLayout(application.getMyTrips().get(2), true);
-            }
-            binding.tabLayout.setTabMode(TabLayout.MODE_FIXED);
-            binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    String tabText = tab.getText().toString();
-                    if (tabText.equals("CURRENT")) {
-                        activity.getNavController().navigate(MyTripsFragmentDirections.actionMyTripsFragmentToTripFragment(application.getMyTrips().get(1).get(0)));
-                    }
-                    if (tabText.equals("PAST")) {
-                        activity.getNavController().navigate(MyTripsFragmentDirections.actionMyTripsFragmentToTripFragment(application.getMyTrips().get(0).get(0)));
-                    }
-                    if (tabText.equals("UPCOMING")) {
-                        activity.getNavController().navigate(MyTripsFragmentDirections.actionMyTripsFragmentToTripFragment(application.getMyTrips().get(2).get(0)));
-                    }
+            if (binding.tabLayout.getTabCount() == 0) {
+                if (application.getMyTrips() != null && !application.getMyTrips().get(1).isEmpty()) {
+                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("CURRENT"));
+                    setLayout(application.getMyTrips().get(1), false);
                 }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-
+                if (application.getMyTrips() != null && !application.getMyTrips().get(0).isEmpty()) {
+                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("PAST"));
+                    if (binding.tabLayout.getTabCount() == 1) setLayout(application.getMyTrips().get(0), false);
                 }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-
+                if (application.getMyTrips() != null && !application.getMyTrips().get(2).isEmpty()) {
+                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("UPCOMING"));
+                    if (binding.tabLayout.getTabCount() == 1) setLayout(application.getMyTrips().get(2), true);
                 }
-            });
+                binding.tabLayout.setTabMode(TabLayout.MODE_FIXED);
+                binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        String tabText = tab.getText().toString();
+                        if (tabText.equals("CURRENT")) {
+                            setLayout(application.getMyTrips().get(1), false);
+                        }
+                        if (tabText.equals("PAST")) {
+                            setLayout(application.getMyTrips().get(0), false);
+                        }
+                        if (tabText.equals("UPCOMING")) {
+                            setLayout(application.getMyTrips().get(2), true);
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+            }
         }
     }
 
